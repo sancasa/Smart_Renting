@@ -1,0 +1,97 @@
+,Tipo,Dormitórios,Banheiros,Garagens,Bairro,Valor,Suítes,Mobiliado
+0,Apartamento Padrão,1,1,0, Parque Arnold Schimidt,712.5,0,Não
+1,Casa Padrão,3,1,2, Portal do Sol,3000.0,1,Sim
+2,Casa Sobrado,3,1,8, Parque Delta,2000.0,0,Não
+3,Casa Padrão,3,1,1, Centro,2083.75,0,Não
+4,Apartamento Padrão,2,1,1, Jardim Embaré,833.75,0,Não
+5,Casa Padrão,3,3,4, Jardim São João Batista,4167.5,1,Sim
+6,Apartamento Padrão,1,1,1, Jardim Santa Paula,1390.0,0,Sim
+7,Apartamento Padrão,2,1,1, Parque Fehr,833.75,0,Não
+8,Apartamento Padrão,1,1,1, Jardim Bandeirantes,1000.0,0,Sim
+9,Apartamento Padrão,1,1,1, Jardim Santa Paula,1111.25,1,Não
+10,Apartamento Flat,1,1,0, Jardim Santa Paula,900.0,0,Não
+11,Apartamento Padrão,2,1,1, Parque Fehr,972.5,0,Sim
+12,Apartamento Padrão,2,1,1, Romeu Santini,1000.0,0,Não
+13,Apartamento Padrão,2,1,1, Residencial Parati,1062.5,0,Sim
+14,Apartamento Padrão,2,1,1, Parque Sabará,1528.75,0,Sim
+15,Casa Padrão,3,1,2, Jardim Sao Carlos,2778.75,0,Não
+16,Casa Padrão,2,1,2, Parque Santa Felícia Jardim,2361.25,0,Não
+17,Casa Padrão,2,1,2, Residencial Astolpho Luiz do Prado,875.0,0,Não
+18,Apartamento Padrão,2,1,2, Jardim Bethânia,2083.75,1,Sim
+19,Apartamento Padrão,2,1,1, Loteamento São Carlos Club,3375.0,1,Sim
+20,Casa Condomínio,3,1,4, Condomínio Residencial Village ,6875.0,2,Sim
+21,Casa Padrão,2,2,2, Centro,3472.5,0,Não
+22,Apartamento Padrão,2,1,1, Jardim Bandeirantes,1125.0,0,Não
+23,Casa Sobrado,3,2,1, Jardim Gonzaga,1111.25,0,Não
+24,Casa Padrão,2,1,2, Agua Vermelha,1562.5,0,Não
+25,Apartamento Padrão,3,1,1, Centro,1390.0,1,Não
+26,Casa Padrão,3,3,3, Romeu Santini,2083.75,1,Não
+27,Casa Padrão,3,1,0, Centro,2708.75,0,Não
+28,Apartamento Padrão,2,1,1, Jardim Embaré,875.0,0,Não
+29,Apartamento Padrão,2,1,2, Parque Faber Castell I,2083.75,2,Sim
+30,Casa Padrão,1,1,1, Parque Santa Felícia Jardim,1130.0,0,Não
+31,Apartamento Padrão,2,1,1, Vila Rancho Velho,1286.61,0,Sim
+32,Casa Sobrado,3,1,9, Cidade Jardim,2361.25,2,Não
+33,Casa Padrão,3,1,1, Jardim Tangará,1390.0,0,Não
+34,Casa Padrão,3,2,1, Jardim Bethânia,2778.75,0,Não
+35,Casa Padrão,3,1,2, Jardim Medeiros,2875.0,1,Sim
+36,Casa Padrão,4,2,3, Vila Prado,6945.0,1,Sim
+37,Apartamento Padrão,4,0,0, Jardim Sao Carlos,2500.0,1,Sim
+38,Apartamento Padrão,2,1,1, Vila Izabel,903.75,0,Sim
+39,Apartamento Padrão,2,1,1, Vila Rancho Velho,1390.0,0,Sim
+40,Apartamento Padrão,4,2,2, Parque Faber Castell I,3472.5,2,Sim
+41,Casa Sobrado,2,1,0, Jardim Cruzeiro do Sul,1111.25,2,Sim
+42,Apartamento Padrão,2,1,1, Jardim Das Torres,972.5,0,Sim
+43,Apartamento Padrão,3,2,1, Centro,1458.75,0,Sim
+44,Apartamento Padrão,2,1,1, Vila Rancho Velho,972.5,0,Sim
+45,Apartamento Padrão,3,1,2, Núcleo Residencial Silvio Vilar,2083.75,1,Sim
+46,Apartamento Padrão,2,1,1, Jardim Embaré,750.0,0,Sim
+47,Apartamento Padrão,2,1,1, Vila Monteiro Gleba I,1111.25,0,Sim
+48,Apartamento Padrão,1,1,1, Centro,1187.5,0,Sim
+49,Apartamento Padrão,1,1,1, Vila Marina,1125.0,0,Sim
+50,Apartamento Padrão,2,1,2, Vila Rancho Velho,1390.0,0,Sim
+51,Casa Padrão,5,6,4, Centro,48611.25,4,Não
+52,Casa Padrão,2,1,2, Vila Boa Vista I,1875.0,0,Sim
+53,Apartamento Padrão,2,1,1, Residencial Monsenhor Romeu Tortorelli,903.75,0,Sim
+54,Apartamento Padrão,2,1,1, Recreio São Judas Tadeu,1000.0,0,Sim
+55,Casa Padrão,3,2,0, Vila Monteiro Gleba I,2875.0,0,Sim
+56,Apartamento Padrão,3,1,2, Jardim Alvorada,3250.0,1,Sim
+57,Apartamento Kitnet,1,1,0, Loteamento Habitacional São Car,833.75,0,Sim
+58,Apartamento Padrão,2,1,2, Jardim Alvorada,2000.0,1,Sim
+59,Apartamento Padrão,2,1,1, Recreio São Judas Tadeu,833.75,0,Sim
+60,Casa Padrão,2,1,0, Centreville,1500.0,0,Não
+61,Apartamento Padrão,2,1,1, Jardim Embaré,750.0,0,Sim
+62,Casa Padrão,1,1,0, Jardim Brasil,1237.5,0,Não
+63,Apartamento Padrão,1,1,1, Jardim Paraíso,1031.25,0,Não
+64,Apartamento Padrão,2,1,1, Parque Santa Felícia Jardim,765.0,0,Sim
+65,Apartamento Kitnet,1,1,0, Centro,1187.5,0,Sim
+66,Casa Padrão,3,2,1, Centro,2361.25,0,Sim
+67,Casa Padrão,2,1,0, Vila Costa do Sol,1790.09,0,Não
+68,Casa Padrão,2,1,2, Jardim Nova Sao Carlos,2500.0,1,Sim
+69,Apartamento Padrão,3,1,0, Jardim Bethânia,1875.0,0,Não
+70,Casa Padrão,2,1,0, Jardim Paulista,1875.0,0,Não
+71,Casa Padrão,2,1,0, Centro,2096.83,0,Não
+72,Apartamento Padrão,1,1,1, Jardim Macarengo,1875.0,0,Não
+73,Apartamento Padrão,4,2,1, Centro,1875.0,1,Sim
+74,Casa Padrão,2,1,3, Jardim Bethânia,1625.0,0,Sim
+75,Apartamento Padrão,1,1,0, Vila Costa do Sol,972.5,0,Sim
+76,Apartamento Padrão,2,1,1, Centreville,1437.5,1,Não
+77,Apartamento Kitchnet ...,1,1,0, Planalto Paraíso,972.5,0,Não
+78,Casa Padrão,1,1,1, Vila Santo Antonio,1093.75,0,Não
+79,Apartamento Padrão,2,1,1, Jardim Santa Paula,1806.25,0,Não
+80,Apartamento Padrão,2,1,0, Romeu Santini,833.75,0,Não
+81,Casa Padrão,3,4,0, Vila Nery,4167.5,1,Sim
+82,Apartamento Padrão,2,2,1, Jardim Alvorada,2778.75,2,Sim
+83,Casa Padrão,2,5,0, Parque Santa Felícia Jardim,4861.25,1,Sim
+84,Casa Padrão,4,1,2, Estancia Suica,11875.0,3,Sim
+85,Casa Padrão,1,1,0, Jardim Cruzeiro do Sul,812.5,0,Não
+86,Casa Padrão,3,2,1, Jardim Sao Carlos,3472.5,0,Sim
+87,Apartamento Padrão,2,1,1, Parque Faber Castell I,2268.75,1,Sim
+88,Casa Sobrado,1,1,0, Vila Jacobucci,2500.0,1,Sim
+89,Apartamento Padrão,1,1,1, Jardim Paulistano,1528.75,0,Sim
+90,Casa Padrão,3,1,2, Jardim Tangará,1875.0,0,Sim
+91,Apartamento Padrão,2,1,1, Jardim Ipanema,833.75,0,Sim
+92,Apartamento Padrão,2,1,1, Recreio São Judas Tadeu,972.5,0,Sim
+93,Apartamento Padrão,1,1,1, Jardim Paraíso,1583.75,0,Sim
+94,Apartamento Padrão,2,1,1, Residencial Monsenhor Romeu Tortorelli,1111.25,0,Sim
+95,Apartamento Padrão,3,1,2, Jardim Nova Santa Paula,1897.04,1,Sim

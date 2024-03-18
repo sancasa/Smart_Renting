@@ -1,0 +1,303 @@
+<!DOCTYPE HTML>
+<!--
+	Strata by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Strata by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/main.css') }}" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<header id="header">
+				<div class="inner">
+					<br>
+					<br>
+					<br>
+					<br>
+				
+					<!-- <a href="#" class="image avatar"><img src="static/images/avatar.jpg" alt="" /></a> -->
+					<h1><strong>SanCasa</strong>, pra você que<br />
+					quer estimar o valor do aluguel<br />
+					com facilidade.</h1>
+				</div>
+			</header>
+
+		<!-- Main -->
+			<div id="main">
+
+				<!-- One -->
+					<section id="one">
+						<header class="major">
+							<h2>Escolha abaixo como você quer que seja o imóvel: </h2>
+						</header>
+						<form id="signup-form" action="{{url_for('predict', filename='app.py')}}" method="post">
+						<!-- <input type="text" name="Tipo" id="Tipo" placeholder="Casa/Apartamento" required="required"/> -->
+						<select name="Tipo" id="Tipo" required>
+							<option value="">Tipo</option>
+							<option value="Casa">Casa</option>
+							<option value="Apartamento">Apartamento</option>
+						</select>
+						<br>
+						<input type="number" name="Dormitórios" id="Dormitórios" placeholder="Dormitórios" required="required" min="0"/>
+						<br>
+						<input type="number" name="Banheiros" id="Banheiros" placeholder="Banheiros" required="required" min="0"/>
+						<br>
+						<input type="number" name="Garagens" id="Garagens" placeholder="Garagens" required="required" min="0"/>
+						<br>
+						<select name="Bairro" id="Bairro" required>
+							<option value="">Bairro</option>
+							<option value="Agua Vermelha">Agua Vermelha</option>
+							<option value="Azulville II">Azulville II</option>
+							<option value="Bosque de São Carlos">Bosque de São Carlos</option>
+							<option value="Broa">Broa</option>
+							<option value="Centreville">Centreville</option>
+							<option value="Centro">Centro</option>
+							<option value="Chácara Parque Club">Chácara Parque Club</option>
+							<option value="Cidade Aracy">Cidade Aracy</option>
+							<option value="Cidade Aracy II">Cidade Aracy II</option>
+							<option value="Cidade Jardim">Cidade Jardim</option>
+							<option value="Condominio Parque Residencial Damha I">Condominio Parque Residencial Damha I</option>
+							<option value="Condominio Parque Residencial Damha II">Condominio Parque Residencial Damha II</option>
+							<option value="Condominio Residencial Montreal">Condominio Residencial Montreal</option>
+							<option value="Condominio Residencial Village Damha I">Condominio Residencial Village Damha I</option>
+							<option value="Condomínio Residencial Quebec">Condomínio Residencial Quebec</option>
+							<option value="Condomínio Residencial Village ">Condomínio Residencial Village </option>
+							<option value="Conjunto Habitacional Dom Constantino ">Conjunto Habitacional Dom Constantino </option>
+							<option value="Estancia Suica">Estancia Suica</option>
+							<option value="Jardim Acapulco">Jardim Acapulco</option>
+							<option value="Jardim Alvorada">Jardim Alvorada</option>
+							<option value="Jardim Araucária">Jardim Araucária</option>
+							<option value="Jardim Bandeirantes">Jardim Bandeirantes</option>
+							<option value="Jardim Beatriz">Jardim Beatriz</option>
+							<option value="Jardim Bethânia">Jardim Bethânia</option>
+							<option value="Jardim Bicão">Jardim Bicão</option>
+							<option value="Jardim Botafogo">Jardim Botafogo</option>
+							<option value="Jardim Botafogo 1">Jardim Botafogo 1</option>
+							<option value="Jardim Brasil">Jardim Brasil</option>
+							<option value="Jardim Cardinali">Jardim Cardinali</option>
+							<option value="Jardim Centenário">Jardim Centenário</option>
+							<option value="Jardim Cruzeiro do Sul">Jardim Cruzeiro do Sul</option>
+							<option value="Jardim Das Torres">Jardim Das Torres</option>
+							<option value="Jardim Embaré">Jardim Embaré</option>
+							<option value="Jardim Gibertoni">Jardim Gibertoni</option>
+							<option value="Jardim Gonzaga">Jardim Gonzaga</option>
+							<option value="Jardim Hikare">Jardim Hikare</option>
+							<option value="Jardim Ipanema">Jardim Ipanema</option>
+							<option value="Jardim Jockei Club A">Jardim Jockei Club A</option>
+							<option value="Jardim Jockey Clube">Jardim Jockey Clube</option>
+							<option value="Jardim Lutfalla">Jardim Lutfalla</option>
+							<option value="Jardim Macarenco">Jardim Macarenco</option>
+							<option value="Jardim Macarengo">Jardim Macarengo</option>
+							<option value="Jardim Medeiros">Jardim Medeiros</option>
+							<option value="Jardim Mercedes">Jardim Mercedes</option>
+							<option value="Jardim Munique">Jardim Munique</option>
+							<option value="Jardim Nova Santa Paula">Jardim Nova Santa Paula</option>
+							<option value="Jardim Nova Sao Carlos">Jardim Nova Sao Carlos</option>
+							<option value="Jardim Paraíso">Jardim Paraíso</option>
+							<option value="Jardim Paulista">Jardim Paulista</option>
+							<option value="Jardim Paulistano">Jardim Paulistano</option>
+							<option value="Jardim Ricetti">Jardim Ricetti</option>
+							<option value="Jardim Santa Maria II">Jardim Santa Maria II</option>
+							<option value="Jardim Santa Paula">Jardim Santa Paula</option>
+							<option value="Jardim Santa Tereza">Jardim Santa Tereza</option>
+							<option value="Jardim Sao Carlos">Jardim Sao Carlos</option>
+							<option value="Jardim Sao Rafael">Jardim Sao Rafael</option>
+							<option value="Jardim Social Belvedere">Jardim Social Belvedere</option>
+							<option value="Jardim Social Presidente Collor">Jardim Social Presidente Collor</option>
+							<option value="Jardim São Carlos">Jardim São Carlos</option>
+							<option value="Jardim São Carlos 5">Jardim São Carlos 5</option>
+							<option value="Jardim São João Batista">Jardim São João Batista</option>
+							<option value="Jardim São Paulo">Jardim São Paulo</option>
+							<option value="Jardim Tabaiacy">Jardim Tabaiacy</option>
+							<option value="Jardim Tangará">Jardim Tangará</option>
+							<option value="Jardim das Torres">Jardim das Torres</option>
+							<option value="Jardim de Cresci">Jardim de Cresci</option>
+							<option value="Jardim dos Coqueiros">Jardim dos Coqueiros</option>
+							<option value="Lagoa Serena">Lagoa Serena</option>
+							<option value="Loteamento Albertini">Loteamento Albertini</option>
+							<option value="Loteamento Habitacional São Car">Loteamento Habitacional São Car</option>
+							<option value="Loteamento Municipal São Carlos">Loteamento Municipal São Carlos</option>
+							<option value="Loteamento Residencial Ipê-Mirim">Loteamento Residencial Ipê-Mirim</option>
+							<option value="Loteamento Residencial Vida Nova S&ati">Loteamento Residencial Vida Nova S&ati</option>
+							<option value="Loteamento São Carlos Club">Loteamento São Carlos Club</option>
+							<option value="Morada Dos Deuses">Morada Dos Deuses</option>
+							<option value="Moradas São Carlos III">Moradas São Carlos III</option>
+							<option value="Nova Estancia">Nova Estancia</option>
+							<option value="Núcleo Residencial Silvio Vilar">Núcleo Residencial Silvio Vilar</option>
+							<option value="PUREZA VILA">PUREZA VILA</option>
+							<option value="Parque Arnold Schimidt">Parque Arnold Schimidt</option>
+							<option value="Parque Belvedere">Parque Belvedere</option>
+							<option value="Parque Delta">Parque Delta</option>
+							<option value="Parque Faber">Parque Faber</option>
+							<option value="Parque Faber Castell I">Parque Faber Castell I</option>
+							<option value="Parque Faber Castell II">Parque Faber Castell II</option>
+							<option value="Parque Faber I">Parque Faber I</option>
+							<option value="Parque Fehr">Parque Fehr</option>
+							<option value="Parque Industrial">Parque Industrial</option>
+							<option value="Parque Primavera">Parque Primavera</option>
+							<option value="Parque Sabará">Parque Sabará</option>
+							<option value="Parque Santa Felícia Jardim">Parque Santa Felícia Jardim</option>
+							<option value="Parque Santa Marta">Parque Santa Marta</option>
+							<option value="Parque Santa Mônica">Parque Santa Mônica</option>
+							<option value="Parque Sisi">Parque Sisi</option>
+							<option value="Parque dos Ipês">Parque dos Ipês</option>
+							<option value="Parque dos Timburis">Parque dos Timburis</option>
+							<option value="Planalto Paraíso">Planalto Paraíso</option>
+							<option value="Portal do Sol">Portal do Sol</option>
+							<option value="Prolongamento Jardim Medeiros">Prolongamento Jardim Medeiros</option>
+							<option value="Recanto do Bosque">Recanto do Bosque</option>
+							<option value="Recreio São Judas Tadeu">Recreio São Judas Tadeu</option>
+							<option value="Recreio dos Bandeirantes">Recreio dos Bandeirantes</option>
+							<option value="Residencial Américo Alves Marga">Residencial Américo Alves Marga</option>
+							<option value="Residencial Astolpho Luiz do Prado">Residencial Astolpho Luiz do Prado</option>
+							<option value="Residencial Eldorado">Residencial Eldorado</option>
+							<option value="Residencial Itamarati">Residencial Itamarati</option>
+							<option value="Residencial Monsenhor Romeu Tortorelli">Residencial Monsenhor Romeu Tortorelli</option>
+							<option value="Residencial Parati">Residencial Parati</option>
+							<option value="Residencial Parque Douradinho">Residencial Parque Douradinho</option>
+							<option value="Residencial Samambaia">Residencial Samambaia</option>
+							<option value="Romeu Santini">Romeu Santini</option>
+							<option value="Swiss Park Residencial">Swiss Park Residencial</option>
+							<option value="Tijuco Preto">Tijuco Preto</option>
+							<option value="Vila Alpes">Vila Alpes</option>
+							<option value="Vila Arnaldo">Vila Arnaldo</option>
+							<option value="Vila Boa Vista">Vila Boa Vista</option>
+							<option value="Vila Boa Vista 1">Vila Boa Vista 1</option>
+							<option value="Vila Brasília">Vila Brasília</option>
+							<option value="Vila Carmem">Vila Carmem</option>
+							<option value="Vila Celina">Vila Celina</option>
+							<option value="Vila Conceição">Vila Conceição</option>
+							<option value="Vila Costa Do Sol">Vila Costa Do Sol</option>
+							<option value="Vila Deriggi">Vila Deriggi</option>
+							<option value="Vila Elizabeth">Vila Elizabeth</option>
+							<option value="Vila Faria">Vila Faria</option>
+							<option value="Vila Irene">Vila Irene</option>
+							<option value="Vila Izabel">Vila Izabel</option>
+							<option value="Vila Jacobucci">Vila Jacobucci</option>
+							<option value="Vila Lutfalla">Vila Lutfalla</option>
+							<option value="Vila Marcelino">Vila Marcelino</option>
+							<option value="Vila Marigo">Vila Marigo</option>
+							<option value="Vila Marina">Vila Marina</option>
+							<option value="Vila Monte Carlo">Vila Monte Carlo</option>
+							<option value="Vila Monteiro">Vila Monteiro</option>
+							<option value="Vila Monteiro Gleba I">Vila Monteiro Gleba I</option>
+							<option value="Vila Morumbi">Vila Morumbi</option>
+							<option value="Vila Nery">Vila Nery</option>
+							<option value="Vila Nossa Senhora de Fátima">Vila Nossa Senhora de Fátima</option>
+							<option value="Vila Prado">Vila Prado</option>
+							<option value="Vila Pureza">Vila Pureza</option>
+							<option value="Vila Rancho Velho">Vila Rancho Velho</option>
+							<option value="Vila Santo Antonio">Vila Santo Antonio</option>
+							<option value="Vila Sonia">Vila Sonia</option>
+							<option value="Vila São José">Vila São José</option>
+							<option value="Vila Vista Alegre">Vila Vista Alegre</option>
+						</select>
+						<br>
+						<input type="number" name="Suítes" id="Suítes" placeholder="Suítes" required="required" min="0"/>
+						<br>
+						<!-- <input type="text" name="Mobiliado" id="Mobiliado" placeholder="Mobiliado (Sim/Não)" required="required"/> -->
+						<select name="Mobiliado" id="Mobiliado" required>
+							<option value="">Mobiliado</option>
+							<option value="Sim">Sim</option>
+							<option value="Não">Não</option>
+						</select>
+						<br>
+						<div style="display: flex; justify-content: space-between;">
+							<input type="submit" value="Calcular" />
+							<input type="reset" value="Limpar" />
+						</div>
+				<!-- <button type="submit" class="btn btn-primary btn-block btn-large"> Calcular! </button> -->
+						</form>
+						<h3 id="resultado"></h3>
+					</section>
+				
+
+				<!-- Two -->
+					<section id="two">
+						<h2>Estatísticas</h2>
+						<div class="row">
+							<article class="col-6 col-12-xsmall work-item">
+								<a href="static/images/fulls/1.png" class="image fit thumb"><img src="static/images/thumbs/1.png" alt="" /></a>
+								<h3>Valor médio do aluguel x Tipo de imóvel</h3>
+								<p>As casas possuem um valor médio de aluguel maior, devido ao fato de, em sua maioria, serem imóveis com maior área.</p>
+							</article>
+							<article class="col-6 col-12-xsmall work-item">
+								<a href="static/images/fulls/2.png" class="image fit thumb"><img src="static/images/thumbs/2.png" alt="" /></a>
+								<h3>Valor médio do aluguel x Número de dormitórios</h3>
+								<p>Ocorre um crescente aumento do valor médio do aluguel com o número de dormitórios para imóveis com até 5 dormitórios.</p>
+							</article>
+							<article class="col-6 col-12-xsmall work-item">
+								<a href="static/images/fulls/3.png" class="image fit thumb"><img src="static/images/thumbs/3.png" alt="" /></a>
+								<h3>Valor médio do aluguel x Imóvel mobiliado</h3>
+								<p>Os imóveis mobiliados possuem valor médio de aluguel mais alto. Aqui, considera-se mobiliado um imóvel que
+									possua ao menos armários na cozinha e/ou guarda-roupas.</p>
+							</article>
+							<article class="col-6 col-12-xsmall work-item">
+								<a href="static/images/fulls/4.png" class="image fit thumb"><img src="static/images/thumbs/4.png" alt="" /></a>
+								<h3>Valor médio do aluguel x Número de suítes</h3>
+								<p>O valor médio do aluguel aumenta de maneira considerável com o aumento do número de suítes, a única exceção 
+									sendo para o valor de 5 suítes.</p>
+							</article>
+							<article class="col-6 col-12-xsmall work-item">
+								<a href="static/images/fulls/5.png" class="image fit thumb"><img src="static/images/thumbs/5.png" alt="" /></a>
+								<h3>Valor médio do aluguel x Número de banheiros</h3>
+								<p>O valor médio do aluguel aumenta progressivamente com o número de banheiros no imóvel. É importante notar que 
+									imóveis com 0 banheiros são pequenos apartamentos que possuem apenas uma suíte.</p>
+							</article>
+							<article class="col-6 col-12-xsmall work-item">
+								<a href="static/images/fulls/6.png" class="image fit thumb"><img src="static/images/thumbs/6.png" alt="" /></a>
+								<h3>Valor médio do aluguel x Principais bairros</h3>
+								<p>Valor médio do aluguel para os bairros mais procurados na cidade.</p>
+							</article>
+						</div>
+						<!-- <ul class="actions">
+							<li><a href="#" class="button">Full Portfolio</a></li>
+						</ul> -->
+					</section>
+
+				<!-- Three -->
+					<section id="three">
+						<h2>Sobre o site</h2>
+						<p>Este site tem a intenção de oferecer, através do uso de aprendizado de máquina, uma
+							maneira fácil de se obter uma previsão do preço de um aluguel na cidade de São Carlos por
+							meio das características do imóvel procurado. Ressalta-se que o valor de aluguel mostrado 
+							não necessariamente é o valor real que será cobrado pela imobiliária e que este valor 
+							não inclui possíveis valores de IPTU e condomínio que possam vir a ser cobrados. Ressalta-se, 
+							também, que não existem quaisquer parcerias nem preferências por nenhuma imobiliária da cidade. 
+						</p>
+					</section>
+
+
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="inner">
+					<!-- <ul class="icons">
+						<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
+						<li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
+						<li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+					</ul> -->
+					<ul class="copyright">
+						<li>&copy; SanCasa</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="static/assets/js/jquery.min.js"></script>
+			<script src="static/assets/js/jquery.poptrox.min.js"></script>
+			<script src="static/assets/js/browser.min.js"></script>
+			<script src="static/assets/js/breakpoints.min.js"></script>
+			<script src="static/assets/js/util.js"></script>
+			<script src="static/assets/js/main.js"></script>
+
+	</body>
+</html>
