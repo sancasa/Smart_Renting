@@ -22,9 +22,9 @@
 					<br>
 				
 					<!-- <a href="#" class="image avatar"><img src="static/images/avatar.jpg" alt="" /></a> -->
-					<h1><strong>SanCasa</strong>, pra você que<br />
-					quer estimar o valor do aluguel<br />
-					com facilidade.</h1>
+					<h1><strong>Smart Renting</strong>, designed for <br />
+					effortless rental value <br />
+					estimation.</h1>
 				</div>
 			</header>
 
@@ -34,24 +34,24 @@
 				<!-- One -->
 					<section id="one">
 						<header class="major">
-							<h2>Escolha abaixo como você quer que seja o imóvel: </h2>
+							<h2>Choose below what you want the property to look like: </h2>
 						</header>
 						<form id="signup-form" action="{{url_for('predict', filename='app.py')}}" method="post">
 						<!-- <input type="text" name="Tipo" id="Tipo" placeholder="Casa/Apartamento" required="required"/> -->
 						<select name="Tipo" id="Tipo" required>
-							<option value="">Tipo</option>
-							<option value="Casa">Casa</option>
-							<option value="Apartamento">Apartamento</option>
+							<option value="">Type</option>
+							<option value="Casa">House</option>
+							<option value="Apartamento">Apartment</option>
 						</select>
 						<br>
-						<input type="number" name="Dormitórios" id="Dormitórios" placeholder="Dormitórios" required="required" min="0"/>
+						<input type="number" name="Dormitórios" id="Dormitórios" placeholder="Bedrooms" required="required" min="0"/>
 						<br>
-						<input type="number" name="Banheiros" id="Banheiros" placeholder="Banheiros" required="required" min="0"/>
+						<input type="number" name="Banheiros" id="Banheiros" placeholder="Bathrooms" required="required" min="0"/>
 						<br>
-						<input type="number" name="Garagens" id="Garagens" placeholder="Garagens" required="required" min="0"/>
+						<input type="number" name="Garagens" id="Garagens" placeholder="Garages" required="required" min="0"/>
 						<br>
 						<select name="Bairro" id="Bairro" required>
-							<option value="">Bairro</option>
+							<option value="">Neighborhood</option>
 							<option value="Agua Vermelha">Agua Vermelha</option>
 							<option value="Azulville II">Azulville II</option>
 							<option value="Bosque de São Carlos">Bosque de São Carlos</option>
@@ -199,18 +199,18 @@
 							<option value="Vila Vista Alegre">Vila Vista Alegre</option>
 						</select>
 						<br>
-						<input type="number" name="Suítes" id="Suítes" placeholder="Suítes" required="required" min="0"/>
+						<input type="number" name="Suítes" id="Suítes" placeholder="Suites" required="required" min="0"/>
 						<br>
 						<!-- <input type="text" name="Mobiliado" id="Mobiliado" placeholder="Mobiliado (Sim/Não)" required="required"/> -->
 						<select name="Mobiliado" id="Mobiliado" required>
-							<option value="">Mobiliado</option>
-							<option value="Sim">Sim</option>
-							<option value="Não">Não</option>
+							<option value="">Furnished?</option>
+							<option value="Sim">Yes</option>
+							<option value="Não">No</option>
 						</select>
 						<br>
 						<div style="display: flex; justify-content: space-between;">
-							<input type="submit" value="Calcular" />
-							<input type="reset" value="Limpar" />
+							<input type="submit" value="Calculate" />
+							<input type="reset" value="Clear" />
 						</div>
 				<!-- <button type="submit" class="btn btn-primary btn-block btn-large"> Calcular! </button> -->
 						</form>
@@ -220,19 +220,19 @@
 
 				<!-- Two -->
 					<section id="two">
-						<h2>Estatísticas</h2>
+						<h2>Statistics</h2>
 						<div class="row">
 							<article class="col-6 col-12-xsmall work-item">
-								<a href="static/images/fulls/1.png" class="image fit thumb"><img src="static/images/thumbs/1.png" alt="" /></a>
-								<h3>Valor médio do aluguel x Tipo de imóvel</h3>
-								<p>As casas possuem um valor médio de aluguel maior, devido ao fato de, em sua maioria, serem imóveis com maior área.</p>
+								<a href="static/images/fulls/type_rent.png" class="image fit thumb"><img src="static/images/thumbs/type_rent.png" alt="" /></a>
+								<h3>Average rental value x Type of property</h3>
+								<p>Houses have a higher average rental value, due to the fact that, for the most part, they are properties with a larger area.</p>
 							</article>
 							<article class="col-6 col-12-xsmall work-item">
-								<a href="static/images/fulls/2.png" class="image fit thumb"><img src="static/images/thumbs/2.png" alt="" /></a>
-								<h3>Valor médio do aluguel x Número de dormitórios</h3>
-								<p>Ocorre um crescente aumento do valor médio do aluguel com o número de dormitórios para imóveis com até 5 dormitórios.</p>
+								<a href="static/images/fulls/furnished_rent.png" class="image fit thumb"><img src="static/images/thumbs/furnished_rent.png" alt="" /></a>
+								<h3>Average rental value x Furnished properties</h3>
+								<p>Furnished properties have a higher average rental price. Here, a property that has at least kitchen cabinets and/or wardrobes is considered furnished..</p>
 							</article>
-							<article class="col-6 col-12-xsmall work-item">
+							<!-- <article class="col-6 col-12-xsmall work-item">
 								<a href="static/images/fulls/3.png" class="image fit thumb"><img src="static/images/thumbs/3.png" alt="" /></a>
 								<h3>Valor médio do aluguel x Imóvel mobiliado</h3>
 								<p>Os imóveis mobiliados possuem valor médio de aluguel mais alto. Aqui, considera-se mobiliado um imóvel que
@@ -255,7 +255,7 @@
 								<h3>Valor médio do aluguel x Principais bairros</h3>
 								<p>Valor médio do aluguel para os bairros mais procurados na cidade.</p>
 							</article>
-						</div>
+						</div> -->
 						<!-- <ul class="actions">
 							<li><a href="#" class="button">Full Portfolio</a></li>
 						</ul> -->
@@ -263,13 +263,12 @@
 
 				<!-- Three -->
 					<section id="three">
-						<h2>Sobre o site</h2>
-						<p>Este site tem a intenção de oferecer, através do uso de aprendizado de máquina, uma
-							maneira fácil de se obter uma previsão do preço de um aluguel na cidade de São Carlos por
-							meio das características do imóvel procurado. Ressalta-se que o valor de aluguel mostrado 
-							não necessariamente é o valor real que será cobrado pela imobiliária e que este valor 
-							não inclui possíveis valores de IPTU e condomínio que possam vir a ser cobrados. Ressalta-se, 
-							também, que não existem quaisquer parcerias nem preferências por nenhuma imobiliária da cidade. 
+						<h2>About the website</h2>
+						<p>This website intends to offer, through the use of machine learning, an easy way to obtain a 
+							prediction of the price of a rental through the characteristics of the property sought. 
+							It should be noted that the rental value shown is not necessarily the real value that will 
+							be charged by the real estate agency and that this value does not include possible condominium fees. 
+							It should also be noted that there are no partnerships or preferences for any real estate agency. 
 						</p>
 					</section>
 
