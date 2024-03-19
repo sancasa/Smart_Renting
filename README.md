@@ -5,7 +5,7 @@ Machine Learning project to predict rental values in São Carlos based on rented
 ## Project structure:
 <pre>
 <code>
-├── Aluguel_SaoCarlos_Python_Flask
+├── Smart_Renting
 │   ├── ml_model
 │   │    ├── model.pkl
 │   │    ├── tabela_aluguel_completa.csv
