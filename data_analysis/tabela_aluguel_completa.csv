@@ -1,4 +1,4 @@
-,Tipo,Dormitórios,Banheiros,Garagens,Bairro,Valor,Suítes,Mobiliado
+,Type,Bedrooms,Bathrooms,Garages,Neighborhood,Valor,Suites,Furnished
 0,Apartamento Padrão,1,1,2, Jardim Paraíso,1750.0,0,Sim
 1,Casa Padrão,3,1,3, Jardim Embaré,2083.75,1,Não
 2,Apartamento Padrão,2,1,1, Vila Celina,1667.5,0,Não
