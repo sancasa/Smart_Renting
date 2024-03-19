@@ -47,7 +47,7 @@ Machine Learning project to predict rental values in São Carlos based on rented
 1. Clone the repository
 
 ```
-git@github.com:naomyduarteg/Aluguel_SaoCarlos_Python_Flask.git
+git@github.com:naomyduarteg/Smart_Renting.git
 ```
 2. Create a virtual environment
 
