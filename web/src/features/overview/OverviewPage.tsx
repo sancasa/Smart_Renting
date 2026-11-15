@@ -2,7 +2,7 @@ import { useId, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ConfirmDialog } from '../../components/ConfirmDialog';
 import { Disclosure } from '../../components/Disclosure';
-import { LifecycleTimeline } from '../../components/LifecycleTimeline';
+import { LifecycleStatus } from '../../components/LifecycleTimeline';
 import { formatDate, formatDateTime } from '../../lib/format';
 import { newIdempotencyKey } from '../../lib/idempotency';
 import { useMutation } from '../../services/hooks';
@@ -22,21 +22,23 @@ export function OverviewPage() {
 
   return (
     <div className="overview">
-      <div className="overview__title">
-        <h1 className="overview__property" tabIndex={-1}>
-          {lease.property.label}
-        </h1>
-        <ul className="overview__people" aria-label="People on this lease">
-          {lease.participants.map((person) => (
-            <li key={person.id}>
-              {person.role === 'tenant' ? 'Tenant' : 'Landlord'}: {person.displayName}
-              {person.id === me?.id ? ' (you)' : ''}
-            </li>
-          ))}
-        </ul>
-      </div>
+      <div className="overview__head">
+        <div className="overview__title">
+          <h1 className="overview__property" tabIndex={-1}>
+            {lease.property.label}
+          </h1>
+          <ul className="overview__people" aria-label="People on this lease">
+            {lease.participants.map((person) => (
+              <li key={person.id}>
+                {person.role === 'tenant' ? 'Tenant' : 'Landlord'}: {person.displayName}
+                {person.id === me?.id ? ' (you)' : ''}
+              </li>
+            ))}
+          </ul>
+        </div>
 
-      <LifecycleTimeline stage={lease.stage} complete={lease.phase === 'settled'} />
+        <LifecycleStatus stage={lease.stage} complete={lease.phase === 'settled'} />
+      </div>
 
       {summary ? (
         <DepositSummaryPanel

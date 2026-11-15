@@ -1,6 +1,5 @@
 import { useCallback, useId, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MoneySummary, RefundBreakdown } from '../../components/MoneySummary';
 import { formatDate } from '../../lib/format';
 import { pluralize } from '../../lib/format';
 import { formatUsd } from '../../lib/money';
@@ -8,6 +7,7 @@ import type { Lease, Proposal } from '../../services/types';
 import { useLeaseContext } from '../lease/LeaseLayout';
 import { FindingEditor, FindingView } from './FindingCards';
 import { ProposalDetails, ProposalHistory } from './ProposalHistory';
+import { FinancialSummary } from './FinancialSummary';
 import { DraftSubmit, RespondPanel } from './ReviewActions';
 
 type Mode = 'empty' | 'draft' | 'respond' | 'disputed' | 'settled' | 'readonly';
@@ -72,7 +72,6 @@ function BackIcon() {
 
 export function ReviewPage() {
   const { lease, proposal } = useLeaseContext();
-  const summaryId = useId();
   const findingsId = useId();
   const [dirtyIds, setDirtyIds] = useState<Set<string>>(new Set());
   const onDirtyChange = useCallback((id: string, dirty: boolean) => {
@@ -90,7 +89,7 @@ export function ReviewPage() {
   const disputedIds = new Set(proposal?.dispute?.itemIds ?? []);
 
   return (
-    <div className="stack">
+    <div className="review">
       <Link className="back-link" to={`/leases/${lease.id}`}>
         <BackIcon />
         Back to overview
@@ -105,43 +104,35 @@ export function ReviewPage() {
       </div>
 
       {mode === 'empty' || !proposal ? null : (
-        <div className="review-grid">
-          <div className="review-grid__summary">
-            {lease.phase === 'move_out' || lease.phase === 'proposal_submitted' ? (
-              <RefundBreakdown lease={lease} proposal={proposal} headingId={summaryId} />
+        <>
+          <FinancialSummary lease={lease} proposal={proposal} />
+
+          <section className="stack" aria-labelledby={findingsId}>
+            <h2 id={findingsId} className="section-title">
+              Findings ({proposal.items.filter((i) => i.included).length})
+            </h2>
+            {proposal.items.length === 0 ? (
+              <p className="surface">No deductions were proposed.</p>
             ) : (
-              <MoneySummary lease={lease} headingId={summaryId} />
+              <ul className="stack">
+                {proposal.items.map((item) => (
+                  <li key={item.id}>
+                    {mode === 'draft' ? (
+                      <FindingEditor leaseId={lease.id} item={item} onDirtyChange={onDirtyChange} />
+                    ) : (
+                      <FindingView item={item} disputed={disputedIds.has(item.id)} />
+                    )}
+                  </li>
+                ))}
+              </ul>
             )}
-          </div>
+          </section>
 
-          <div className="review-grid__main">
-            <section className="stack" aria-labelledby={findingsId}>
-              <h2 id={findingsId} className="section-title">
-                Findings ({proposal.items.filter((i) => i.included).length})
-              </h2>
-              {proposal.items.length === 0 ? (
-                <p className="surface">No deductions were proposed.</p>
-              ) : (
-                <ul className="stack">
-                  {proposal.items.map((item) => (
-                    <li key={item.id}>
-                      {mode === 'draft' ? (
-                        <FindingEditor leaseId={lease.id} item={item} onDirtyChange={onDirtyChange} />
-                      ) : (
-                        <FindingView item={item} disputed={disputedIds.has(item.id)} />
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </section>
-
-            {mode === 'draft' ? <ProposalHistory proposal={proposal} /> : <ProposalDetails lease={lease} proposal={proposal} />}
-            {mode === 'draft' && <DraftSubmit lease={lease} proposal={proposal} hasUnsavedEdits={dirtyIds.size > 0} />}
-            {mode === 'respond' && <RespondPanel lease={lease} proposal={proposal} />}
-            {mode === 'disputed' && proposal.dispute && <DisputeSummary lease={lease} proposal={proposal} />}
-          </div>
-        </div>
+          {mode === 'disputed' && proposal.dispute && <DisputeSummary lease={lease} proposal={proposal} />}
+          {mode === 'draft' ? <ProposalHistory proposal={proposal} /> : <ProposalDetails lease={lease} proposal={proposal} />}
+          {mode === 'draft' && <DraftSubmit lease={lease} proposal={proposal} hasUnsavedEdits={dirtyIds.size > 0} />}
+          {mode === 'respond' && <RespondPanel lease={lease} proposal={proposal} />}
+        </>
       )}
     </div>
   );

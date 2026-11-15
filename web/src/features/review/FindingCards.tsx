@@ -20,17 +20,19 @@ export function FindingView({ item, disputed }: { item: Finding; disputed?: bool
           <span className="tag tag--problem">Disputed</span>
         </p>
       )}
-      <PhotoPair pair={item.photoPair} />
-      <dl className="finding__notes">
-        <div className="finding__note">
-          <dt>Found</dt>
-          <dd>{item.observation}</dd>
-        </div>
-        <div className="finding__note">
-          <dt>Reason</dt>
-          <dd>{item.rationale}</dd>
-        </div>
-      </dl>
+      <div className="finding__evidence">
+        <PhotoPair pair={item.photoPair} />
+        <dl className="finding__notes">
+          <div className="finding__note">
+            <dt>Found</dt>
+            <dd>{item.observation}</dd>
+          </div>
+          <div className="finding__note">
+            <dt>Reason</dt>
+            <dd>{item.rationale}</dd>
+          </div>
+        </dl>
+      </div>
     </article>
   );
 }
@@ -130,13 +132,15 @@ export function FindingEditor({ leaseId, item, onDirtyChange }: FindingEditorPro
         <h3 className="finding__title">{item.label}</h3>
         <p className="finding__amount amount">{formatUsd(item.amount)}</p>
       </div>
-      <PhotoPair pair={item.photoPair} />
-      <dl className="finding__notes">
-        <div className="finding__note">
-          <dt>Found</dt>
-          <dd>{item.observation}</dd>
-        </div>
-      </dl>
+      <div className="finding__evidence">
+        <PhotoPair pair={item.photoPair} />
+        <dl className="finding__notes">
+          <div className="finding__note">
+            <dt>Found</dt>
+            <dd>{item.observation}</dd>
+          </div>
+        </dl>
+      </div>
 
       <form className="stack--tight" onSubmit={submit} noValidate>
         <Field label="Charge amount in dollars" error={errors.amount}>
@@ -181,8 +185,13 @@ export function FindingEditor({ leaseId, item, onDirtyChange }: FindingEditorPro
           </p>
         )}
         <div className="button-row">
-          <button type="submit" className="button" disabled={!dirty || save.pending} aria-label={`Save changes to ${item.label}`}>
-            {save.pending ? 'Saving…' : 'Save changes'}
+          <button
+            type="submit"
+            className="button"
+            disabled={!dirty || save.pending}
+            aria-label={`${saved && !dirty ? 'Saved changes to' : 'Save changes to'} ${item.label}`}
+          >
+            {save.pending ? 'Saving…' : saved && !dirty ? 'Saved' : 'Save changes'}
           </button>
           <button
             type="button"
@@ -194,8 +203,9 @@ export function FindingEditor({ leaseId, item, onDirtyChange }: FindingEditorPro
             {toggle.pending ? 'Removing…' : 'Remove charge'}
           </button>
         </div>
-        <p role="status" className="small muted save-status">
-          {saved && !dirty ? 'Saved.' : ''}
+        {/* Announced to screen readers; sighted users see "Saved" on the button, so no line is reserved. */}
+        <p role="status" className="sr-only">
+          {saved && !dirty ? `Saved changes to ${item.label}.` : ''}
         </p>
       </form>
     </article>

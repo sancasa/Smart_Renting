@@ -292,73 +292,6 @@
 }
 
 
-/* ---------- Money ---------- */
-.money {
-  display: grid;
-  gap: var(--space-4);
-}
-
-.money__rows {
-  display: grid;
-  gap: 0;
-}
-
-.money__row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-4);
-  padding-block: var(--space-3);
-  border-bottom: var(--border);
-}
-
-.money__row:last-child {
-  border-bottom: 0;
-}
-
-.money__label {
-  min-width: 0;
-}
-
-.money__value {
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  text-align: right;
-  white-space: nowrap;
-}
-
-.money__row--strong .money__label,
-.money__row--strong .money__value {
-  font-size: var(--text-large);
-  font-weight: 700;
-}
-
-.money__row--pending {
-  background: var(--color-caution-tint);
-  margin-inline: calc(var(--space-2) * -1);
-  padding-inline: var(--space-2);
-  border-radius: var(--radius-control);
-  border-bottom-color: transparent;
-}
-
-.money__status {
-  display: block;
-  font-size: var(--text-small);
-  font-weight: 400;
-  color: var(--color-muted);
-}
-
-.money__row--pending .money__status {
-  font-weight: 600;
-  color: var(--color-caution);
-}
-
-/* Subtle emphasis for the refund breakdown. */
-.money--tinted {
-  background: var(--color-money);
-  border-color: var(--color-border-soft);
-}
-
 /* ---------- Callouts and tags ---------- */
 .callout {
   padding: var(--space-3) var(--space-4);
@@ -402,42 +335,17 @@
 }
 
 /* ---------- Review ---------- */
-.review-grid {
+/* The review is one centered column: heading, financial summary, then the evidence. */
+.review {
   display: grid;
   gap: var(--space-6);
-  grid-template-areas:
-    'summary'
-    'main';
+  width: 100%;
+  max-width: 60rem;
+  margin-inline: auto;
 }
 
-.review-grid__summary {
-  grid-area: summary;
+.review > * {
   min-width: 0;
-}
-
-.review-grid__main {
-  grid-area: main;
-  display: grid;
-  gap: var(--space-6);
-  min-width: 0;
-}
-
-@media (min-width: 960px) {
-  .review-grid {
-    grid-template-columns: minmax(0, 1fr) 20rem;
-    grid-template-areas: 'main summary';
-    align-items: start;
-  }
-
-}
-
-/* The refund breakdown stays in view while reading evidence, but only when the window is tall
-   enough to hold it. Otherwise it flows with the page, as it always does on mobile. */
-@media (min-width: 960px) and (min-height: 640px) {
-  .review-grid__summary {
-    position: sticky;
-    top: calc(var(--top-h) + var(--space-4));
-  }
 }
 
 .finding {
@@ -840,15 +748,16 @@
   display: grid;
   justify-items: center;
   align-content: start;
-  gap: var(--space-1);
+  gap: 2px;
   text-align: center;
+  line-height: 1.25;
 }
 
 /* The line runs from the previous node's centre to this node's centre, behind both nodes. */
 .timeline__step::before {
   content: '';
   position: absolute;
-  top: calc(0.75rem - 1px);
+  top: calc(0.625rem - 1px);
   right: 50%;
   width: 100%;
   height: 2px;
@@ -869,8 +778,8 @@
   z-index: 1;
   display: grid;
   place-items: center;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.25rem;
+  height: 1.25rem;
   border: 2px solid var(--color-border-strong);
   border-radius: 50%;
   background: var(--color-surface);
@@ -889,8 +798,8 @@
 
 .timeline__step--current .timeline__node::after {
   content: '';
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 0.375rem;
+  height: 0.375rem;
   border-radius: 50%;
   background: var(--color-teal);
 }
@@ -1052,7 +961,7 @@
 }
 
 /* Disclosures outside the overview's two-column group carry their own bottom rule. */
-.fold--standalone {
+.fold.fold--standalone {
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -1088,11 +997,6 @@
   text-align: right;
 }
 
-/* Reserve the line so "Saved." appearing never nudges the form below it. */
-.save-status {
-  min-height: 1.5em;
-}
-
 /* Narrow screens carry the property here, because the header stays a single row. */
 .review-property {
   color: var(--color-muted);
@@ -1101,5 +1005,132 @@
 @media (min-width: 640px) {
   .review-property {
     display: none;
+  }
+}
+
+/* Heading and lifecycle sit together, so the lease's stage is read with its name. */
+.overview__head {
+  display: grid;
+  gap: var(--space-3);
+}
+
+/* The teaser reads as the action word of the disclosure ("View timeline"). */
+.fold__meta--action {
+  font-weight: 600;
+  color: var(--color-teal);
+}
+
+/* ---------- Compact financial summary (review) ---------- */
+.fin {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-money);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-surface);
+}
+
+.fin__items {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.fin__item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'label value'
+    'note value';
+  align-items: baseline;
+  column-gap: var(--space-4);
+  padding-block: var(--space-2);
+}
+
+.fin__item + .fin__item {
+  border-top: 1px solid var(--color-border);
+}
+
+.fin__label {
+  grid-area: label;
+  color: var(--color-muted);
+}
+
+.fin__value {
+  grid-area: value;
+  margin: 0;
+  font-size: var(--text-large);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.fin__item--lead .fin__label {
+  color: var(--color-text);
+}
+
+.fin__item--lead .fin__value {
+  font-size: var(--text-title);
+  font-weight: 700;
+}
+
+.fin__value--outcome {
+  color: var(--color-teal);
+}
+
+.fin__note {
+  grid-area: note;
+  margin: 0;
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+.fin__note--processing {
+  font-weight: 600;
+  color: var(--color-caution);
+}
+
+.fin__footnote {
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+/* Wider screens lay the items out side by side, lead first. */
+@media (min-width: 720px) {
+  .fin {
+    padding: var(--space-4) var(--space-6);
+  }
+
+  .fin__items {
+    grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+    gap: var(--space-2) var(--space-6);
+  }
+
+  .fin__item {
+    grid-template-columns: none;
+    grid-template-areas:
+      'label'
+      'value'
+      'note';
+    align-content: start;
+    padding-block: 0;
+  }
+
+  .fin__item + .fin__item {
+    border-top: 0;
+  }
+}
+
+/* Photos sit beside the notes on desktop, so each finding reads as one compact unit. */
+.finding__evidence {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (min-width: 860px) {
+  .finding__evidence {
+    grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+    gap: var(--space-6);
+    align-items: start;
   }
 }

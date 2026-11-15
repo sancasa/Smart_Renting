@@ -12,6 +12,8 @@ interface DisclosureProps {
   title: string;
   /** Short teaser shown beside the title while closed, such as a count. */
   meta?: string;
+  /** Style the teaser as the action word, such as "View timeline". */
+  metaIsAction?: boolean;
   /** Add a bottom rule when it is not part of a stacked group. */
   standalone?: boolean;
   children: ReactNode;
@@ -22,12 +24,12 @@ interface DisclosureProps {
  * accessible without script. The label says what is inside and the chevron shows it opens.
  * Opening adds content below the row and never moves anything above it, so the page does not jump.
  */
-export function Disclosure({ title, meta, standalone = false, children }: DisclosureProps) {
+export function Disclosure({ title, meta, metaIsAction = false, standalone = false, children }: DisclosureProps) {
   return (
     <details className={`fold${standalone ? ' fold--standalone' : ''}`}>
       <summary className="fold__summary">
         <span className="fold__title">{title}</span>
-        {meta && <span className="fold__meta">{meta}</span>}
+        {meta && <span className={`fold__meta${metaIsAction ? ' fold__meta--action' : ''}`}>{meta}</span>}
         <Chevron />
       </summary>
       <div className="fold__body">{children}</div>
