@@ -1,27 +1,29 @@
-import { useId, useRef, useState } from 'react';
+import { useId, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ConfirmDialog } from '../../components/ConfirmDialog';
 import { MilestoneBar } from '../../components/MilestoneBar';
-import { MoneySummary } from '../../components/MoneySummary';
 import { formatDate, formatDateTime } from '../../lib/format';
 import { newIdempotencyKey } from '../../lib/idempotency';
 import { useMutation } from '../../services/hooks';
 import { useServices } from '../../services/ServiceContext';
 import type { Lease } from '../../services/types';
 import { useLeaseContext } from '../lease/LeaseLayout';
+import { DepositSummaryPanel } from './DepositSummaryPanel';
 import { describeLease, type ActionButton } from './describeLease';
+import { summarizeDeposit } from './summarizeDeposit';
 
 export function OverviewPage() {
   const { lease, proposal } = useLeaseContext();
   const next = describeLease(lease, proposal);
-  const moneyId = useId();
+  const summary = summarizeDeposit(lease, proposal);
+  const summaryId = useId();
   const me = lease.participants.find((p) => p.id === lease.viewer.userId);
 
   return (
-    <div className="page stack">
-      <div className="page-title">
-        <h1 className="page-title__heading">{lease.property.label}</h1>
-        <ul className="people" aria-label="People on this lease">
+    <div className="page overview">
+      <div className="overview__title">
+        <h1 className="overview__property">{lease.property.label}</h1>
+        <ul className="overview__people" aria-label="People on this lease">
           {lease.participants.map((person) => (
             <li key={person.id}>
               {person.role === 'tenant' ? 'Tenant' : 'Landlord'}: {person.displayName}
@@ -31,35 +33,30 @@ export function OverviewPage() {
         </ul>
       </div>
 
+      {summary ? (
+        <DepositSummaryPanel
+          headingId={summaryId}
+          summary={summary}
+          detail={summary.detail ?? next.detail}
+          waiting={next.waiting}
+          action={next.primary && <ActionControl lease={lease} action={next.primary} />}
+        />
+      ) : (
+        <section className="callout callout--problem" role="alert">
+          <h2 className="callout__title">These amounts can't be shown</h2>
+          <p>They don't add up to the original deposit, so we won't display numbers we can't stand behind. Reload to try again.</p>
+        </section>
+      )}
+
       <MilestoneBar stage={lease.stage} complete={lease.phase === 'settled'} />
 
-      <div className="overview-grid">
-        <NextAction lease={lease} next={next} />
-        <MoneySummary lease={lease} headingId={moneyId} />
-      </div>
-
-      <Disclosures lease={lease} />
+      <Folds lease={lease} />
     </div>
   );
 }
 
-function NextAction({ lease, next }: { lease: Lease; next: ReturnType<typeof describeLease> }) {
-  const titleId = useId();
-  const waitingOnly = !next.primary || next.primary.variant === 'secondary';
-  return (
-    <section className={`surface next-action${next.waiting && waitingOnly ? ' next-action--waiting' : ''}`} aria-labelledby={titleId}>
-      <h2 id={titleId} className="next-action__title">
-        {next.headline}
-      </h2>
-      <p className="next-action__detail">{next.detail}</p>
-      {next.waiting && <p className="next-action__waiting">{next.waiting}</p>}
-      {next.primary && <ActionControl lease={lease} action={next.primary} />}
-    </section>
-  );
-}
-
 function ActionControl({ lease, action }: { lease: Lease; action: ActionButton }) {
-  const className = `button${action.variant === 'primary' ? ' button--primary' : ''}`;
+  const className = `button button--hero${action.variant === 'primary' ? ' button--primary' : ''}`;
   if (action.kind === 'link') {
     return (
       <div className="button-row">
@@ -119,55 +116,67 @@ function MoveOutAction({ lease, label, className }: { lease: Lease; label: strin
   );
 }
 
-function Disclosures({ lease }: { lease: Lease }) {
-  const events = [...lease.events].sort((a, b) => b.at.localeCompare(a.at));
-  const receipts = lease.operations.filter((o) => o.txHash);
+function Chevron() {
   return (
-    <div className="stack--tight">
-      <details className="disclosure">
-        <summary className="disclosure__summary">Evidence</summary>
-        <div className="disclosure__body">
-          <ul className="list-rows">
-            {lease.evidence.map((entry) => (
-              <li key={entry.id} className="list-rows__item">
-                <span>
-                  <strong>{entry.label}</strong>
-                </span>
-                <span className="small muted">{entry.detail}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </details>
+    <svg className="fold__chevron" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false">
+      <path d="m4.5 7 4.5 4.5L13.5 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
-      <details className="disclosure">
-        <summary className="disclosure__summary">Activity</summary>
-        <div className="disclosure__body">
-          <p className="small muted">
-            {receipts.length === 0
-              ? 'This is demo data. These entries are simulated, and there are no transaction receipts to show.'
-              : 'Transaction receipts for confirmed transfers:'}
-          </p>
-          {receipts.length > 0 && (
-            <ul className="list-rows">
-              {receipts.map((op) => (
-                <li key={op.id} className="list-rows__item">
-                  <span>{op.kind === 'refund' ? 'Refund' : 'Payment to landlord'}</span>
-                  <span className="small muted">{op.txHash}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-          <ul className="list-rows">
-            {events.map((event) => (
-              <li key={event.id} className="list-rows__item">
-                <span>{event.text}</span>
-                <span className="small muted">{formatDateTime(event.at)}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </details>
+function Fold({ title, meta, children }: { title: string; meta: string; children: ReactNode }) {
+  return (
+    <details className="fold">
+      <summary className="fold__summary">
+        <span className="fold__title">{title}</span>
+        <span className="fold__meta">{meta}</span>
+        <Chevron />
+      </summary>
+      <div className="fold__body">{children}</div>
+    </details>
+  );
+}
+
+/** Evidence and recent activity: open rows, not cards, so the summary stays the one focal surface. */
+function Folds({ lease }: { lease: Lease }) {
+  // Oldest-first sort is stable, so entries sharing a timestamp keep their recorded order; reversing gives newest first.
+  const events = [...lease.events].sort((a, b) => a.at.localeCompare(b.at)).reverse().slice(0, 5);
+  const receipts = lease.operations.filter((o) => o.txHash);
+  const evidenceCount = lease.evidence.length;
+  return (
+    <div className="folds">
+      <Fold title="Evidence" meta={`${evidenceCount} ${evidenceCount === 1 ? 'item' : 'items'}`}>
+        <ul className="fold__rows">
+          {lease.evidence.map((entry) => (
+            <li key={entry.id} className="fold__row fold__row--stacked">
+              <span className="fold__row-title">{entry.label}</span>
+              <span className="fold__row-note">{entry.detail}</span>
+            </li>
+          ))}
+        </ul>
+      </Fold>
+
+      <Fold title="Recent activity" meta={events[0]?.text ?? 'Nothing yet'}>
+        <p className="fold__note">
+          {receipts.length === 0
+            ? 'Demo data: these entries are simulated, and there are no transaction receipts to show.'
+            : 'Transaction receipts for confirmed transfers are listed below.'}
+        </p>
+        <ul className="fold__rows">
+          {events.map((event) => (
+            <li key={event.id} className="fold__row">
+              <span>{event.text}</span>
+              <span className="fold__row-note">{formatDateTime(event.at)}</span>
+            </li>
+          ))}
+          {receipts.map((op) => (
+            <li key={op.id} className="fold__row">
+              <span>{op.kind === 'refund' ? 'Refund receipt' : 'Payment receipt'}</span>
+              <span className="fold__row-note">{op.txHash}</span>
+            </li>
+          ))}
+        </ul>
+      </Fold>
     </div>
   );
 }
