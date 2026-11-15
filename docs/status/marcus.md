@@ -54,7 +54,8 @@
 ## Blocked by / waiting on
 - Team agreement on API payloads, wallet model, escrow transitions (see requests below). None of this blocks the sample-mode work.
 - Branch not yet on GitHub: `git push` to `sancasa/Smart_Renting` returns 403 (no write access for the pushing account). Needs write access or a fork.
-- Demo not yet on Vercel: the Vercel CLI needs a fresh `vercel login`. `web/vercel.json` is ready (SPA rewrite, build pinned to simulated data).
+- Demo deployed (simulated data only): https://deposit-keeper-demo.vercel.app (Vercel project `deposit-keeper-demo`, deployed from `web/` by CLI). Public, no sign-in; use this alias, because the per-deployment URLs sit behind Vercel SSO. A cold link to `/leases/sample-lease/review` shows "No proposal to review yet" until a state is loaded from Demo controls (sample state is per tab).
+- Vercel install uses `npm install` instead of `npm ci`: the lockfile, generated on macOS, lacks two optional Linux entries (`@emnapi/core`, `@emnapi/runtime`) that Vercel's `npm ci` rejects. Worth regenerating the lockfile on Linux or CI later.
 
 ## Integration requests (proposed types live in `web/src/services/types.ts`; nothing is in `docs/API.md` or `shared/`)
 For the backend owner:
