@@ -18,6 +18,45 @@ export interface FinancialItem {
   processing?: boolean;
   /** Money that reached someone, shown in the brand color. */
   outcome?: boolean;
+  /** The amount this screen is about, shown larger. When no item says so, the first one leads. */
+  lead?: boolean;
+}
+
+/** What has actually happened to the refund transfer. Never inferred from the proposal alone. */
+export type RefundStatus = 'confirmed' | 'processing' | 'failed' | 'unknown' | 'not_started';
+
+export function refundStatusOf(lease: Lease): RefundStatus {
+  const operation = lease.operations.find((o) => o.kind === 'refund');
+  if (!operation) return 'not_started';
+  if (operation.status === 'succeeded') return 'confirmed';
+  if (operation.status === 'pending') return 'processing';
+  return operation.status;
+}
+
+/** The short state shown beneath the refund amount. Only "confirmed" says it was returned. */
+export const REFUND_STATUS_NOTE: Record<RefundStatus, string> = {
+  confirmed: 'Returned, confirmed',
+  processing: 'Processing, not yet returned',
+  failed: 'Transfer failed',
+  unknown: 'Status not yet confirmed',
+  not_started: 'Not sent yet',
+};
+
+/** One accurate sentence about the separate refund, for the tenant's response. */
+export function refundStatusSentence(lease: Lease, proposal: Proposal): string {
+  const amount = formatUsd(proposal.refundAmount);
+  switch (refundStatusOf(lease)) {
+    case 'confirmed':
+      return `Your ${amount} refund is separate and has already been returned.`;
+    case 'processing':
+      return `Your ${amount} refund is separate. It is still processing and has not been returned yet.`;
+    case 'failed':
+      return `Your ${amount} refund is separate. Its transfer failed, so it has not been returned.`;
+    case 'unknown':
+      return `Your ${amount} refund is separate. Its status isn't confirmed yet, so it is not shown as returned.`;
+    case 'not_started':
+      return `Your ${amount} refund is separate. It hasn't been sent yet.`;
+  }
 }
 
 export interface ReviewFinancials {
@@ -144,6 +183,29 @@ export function reviewFinancials(lease: Lease, proposal: Proposal): ReviewFinanc
             { id: 'deductions', label: 'Deductions', value: formatUsd('0') },
           ],
           note: 'No deductions, so nothing stays held.',
+        };
+      }
+      if (viewer === 'tenant') {
+        // The tenant reviewing deductions reads the arithmetic in order: deposit, minus deductions, refund.
+        // "Still held" is the same money as the deductions, so it is not repeated as a fourth column.
+        return {
+          items: [
+            original,
+            {
+              id: 'deductions',
+              label: 'Proposed deductions',
+              value: `\u2212${formatUsd(deductions)}`,
+              note: 'Held pending resolution',
+              lead: true,
+            },
+            {
+              id: 'refund',
+              label: 'Refund to you',
+              value: formatUsd(proposal.refundAmount),
+              note: REFUND_STATUS_NOTE[refundStatusOf(lease)],
+              processing: refundStatusOf(lease) === 'processing',
+            },
+          ],
         };
       }
       return {

@@ -20,6 +20,7 @@ export function FinancialSummary({ lease, proposal }: { lease: Lease; proposal: 
     );
   }
 
+  const leadIndex = Math.max(0, data.items.findIndex((item) => item.lead));
   return (
     <section className="fin" aria-labelledby={titleId}>
       <h2 id={titleId} className="sr-only">
@@ -27,7 +28,7 @@ export function FinancialSummary({ lease, proposal }: { lease: Lease; proposal: 
       </h2>
       <dl className="fin__items">
         {data.items.map((item, index) => (
-          <div key={item.id} className={`fin__item${index === 0 ? ' fin__item--lead' : ''}`}>
+          <div key={item.id} className={`fin__item${index === leadIndex ? ' fin__item--lead' : ''}`}>
             <dt className="fin__label">{item.label}</dt>
             <dd className={`fin__value${item.outcome ? ' fin__value--outcome' : ''}`}>{item.value}</dd>
             {item.note && <dd className={`fin__note${item.processing ? ' fin__note--processing' : ''}`}>{item.note}</dd>}

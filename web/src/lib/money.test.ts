@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatUsd, parseUsdInput, subUnits, sumUnits, toInputText } from './money';
+import { formatUsd, formatUsdWhole, parseUsdInput, subUnits, sumUnits, toInputText } from './money';
 import { reconcileFunds } from './funds';
 
 describe('formatUsd', () => {
@@ -15,6 +15,15 @@ describe('formatUsd', () => {
   it('rejects non-integer strings', () => {
     expect(() => formatUsd('12.5')).toThrow();
     expect(() => formatUsd('-1')).toThrow();
+  });
+});
+
+describe('formatUsdWhole', () => {
+  it('drops the cents only when there are none', () => {
+    expect(formatUsdWhole('120000000')).toBe('$120');
+    expect(formatUsdWhole('1000000000')).toBe('$1,000');
+    expect(formatUsdWhole('120500000')).toBe('$120.50');
+    expect(formatUsdWhole('1234567')).toBe('$1.234567');
   });
 });
 

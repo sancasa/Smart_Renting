@@ -53,6 +53,13 @@ export function formatUsd(value: BaseUnits): string {
   return `$${wholeText}.${fractionText}`;
 }
 
+/** "$120" when there are no cents, otherwise the exact amount ("$120.50"). For short action labels. */
+export function formatUsdWhole(value: BaseUnits): string {
+  const n = toBig(value);
+  if (n % UNIT !== 0n) return formatUsd(value);
+  return `$${(n / UNIT).toLocaleString('en-US')}`;
+}
+
 export type ParsedAmount = { ok: true; value: BaseUnits } | { ok: false; error: string };
 
 /** Parses user input such as "70", "70.5", "$1,250.00" into base units (whole cents only). */
