@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  acceptProposal,
   buildScenario,
   saveDraft,
   selectLease,
@@ -42,23 +43,27 @@ describe('describeLease', () => {
     expect(tenant.waiting).toContain('Waiting on Jordan Lee');
   });
 
-  it('says the refund is processing and the remainder is held, without calling it returned', () => {
+  it('offers one review action and says the amount stays held until accepted or a dispute is resolved', () => {
     const tenant = describeFor('refund_pending', 'tenant');
     expect(tenant.headline).toContain('$120.00 in deductions');
-    expect(tenant.detail).toContain('$880.00 is processing');
-    expect(tenant.detail).not.toContain('confirmed');
-    expect(tenant.detail).toContain('$120.00 stays held');
+    expect(tenant.detail).toBe('This amount stays held until you accept the deductions or a dispute is resolved.');
     expect(tenant.primary).toMatchObject({ label: 'Review deductions', variant: 'primary' });
   });
 
-  it('says the refund is confirmed once verified', () => {
-    expect(describeFor('refund_confirmed', 'tenant').detail).toContain('$880.00 is confirmed');
+  it('does not repeat refund amounts the breakdown already shows', () => {
+    // Processing versus confirmed is carried by the breakdown rows, not by a second sentence.
+    for (const scenario of ['refund_pending', 'refund_confirmed'] as const) {
+      expect(describeFor(scenario, 'tenant').detail).not.toContain('$880.00');
+    }
   });
 
   it('tells the landlord the tenant has to respond, without offering an action that is not theirs', () => {
     const landlord = describeFor('refund_confirmed', 'landlord');
     expect(landlord.waiting).toContain('Waiting on Alex Rivera');
     expect(landlord.primary).toMatchObject({ variant: 'secondary' });
+    // The actor is named once. The sentence above it only states the hold rule.
+    expect(landlord.detail).not.toContain('Alex Rivera');
+    expect(landlord.detail).toBe('This amount stays held until the deductions are accepted or a dispute is resolved.');
   });
 
   it('shows refund processing, and no review task, for a zero-deduction proposal', () => {
@@ -81,10 +86,36 @@ describe('describeLease', () => {
     }
   });
 
-  it('shows awaiting review with the held amount after a dispute', () => {
+  it('shows awaiting review after a dispute, with one waiting line and no duplicate hold sentence', () => {
     const result = describeFor('disputed', 'tenant');
     expect(result.headline).toBe('Awaiting review');
-    expect(result.detail).toContain('$120.00 stays held');
+    expect(result.detail).toBe('You disputed 1 deduction.');
+    expect(result.waiting).toBe('Waiting for a ruling on the disputed deductions.');
+  });
+
+  it('says the payout is waiting for confirmation once the deductions are accepted', () => {
+    let state = buildScenario('refund_confirmed', now);
+    state = acceptProposal(state, state.proposal.version, now);
+    const tenant = describeLease(selectLease(state, 'tenant'), selectProposal(state, 'tenant'));
+    const landlord = describeLease(selectLease(state, 'landlord'), selectProposal(state, 'landlord'));
+    expect(tenant.detail).toBe('You accepted the deductions.');
+    expect(landlord.detail).toBe('Alex Rivera accepted the deductions.');
+    expect(tenant.waiting).toBe('Waiting for the transfer to confirm.');
+  });
+
+  it('never says disputing releases money, in any state for either role', () => {
+    const misleading = /accept or dispute|until they respond|until you respond|accepts or disputes/i;
+    const scenarios: ScenarioId[] = ['active', 'move_out', 'refund_pending', 'refund_confirmed', 'disputed', 'settled'];
+    for (const scenario of scenarios) {
+      for (const role of ['tenant', 'landlord'] as const) {
+        const { detail, waiting } = describeFor(scenario, role);
+        // "Waiting on X to accept or dispute" names who acts; it does not describe the hold.
+        expect(detail).not.toMatch(misleading);
+        if (waiting && !/^Waiting on .+ to accept or dispute the deductions\.$/.test(waiting)) {
+          expect(waiting).not.toMatch(misleading);
+        }
+      }
+    }
   });
 
   it('summarizes settlement from confirmed amounts only', () => {

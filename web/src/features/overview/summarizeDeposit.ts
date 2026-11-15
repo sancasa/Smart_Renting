@@ -22,7 +22,7 @@ export interface Fact {
 
 export interface DepositSummary {
   figure: string;
-  /** Completes the sentence the figure starts, e.g. "returned to you". */
+  /** Says what the amount is, shown above it, e.g. "Deductions under review". */
   label: string;
   tone: FigureTone;
   facts: Fact[];
@@ -88,18 +88,17 @@ export function summarizeDeposit(lease: Lease, proposal: Proposal | null): Depos
 
   switch (lease.phase) {
     case 'active':
-      return done(formatUsd(funds.original), 'deposit held', 'neutral', []);
+      return done(formatUsd(funds.original), 'Deposit held', 'neutral', []);
 
     case 'move_out':
       if (lease.allowedActions.includes('edit_proposal')) {
-        return done(formatUsd(deductions), 'in proposed charges to review', 'attention', [original]);
+        return done(formatUsd(deductions), 'Proposed charges to review', 'attention', [original]);
       }
-      return done(formatUsd(funds.original), 'deposit held', 'neutral', []);
+      return done(formatUsd(funds.original), 'Deposit held', 'neutral', []);
 
     case 'proposal_submitted': {
       if (!isPositive(deductions)) {
-        const label = viewer === 'tenant' ? 'full refund processing' : `full refund to ${tenant} processing`;
-        return done(formatUsd(proposal?.refundAmount ?? funds.original), label, 'neutral', [
+        return done(formatUsd(proposal?.refundAmount ?? funds.original), 'Full refund processing', 'neutral', [
           original,
           { id: 'deductions', label: 'Deductions', value: formatUsd('0') },
         ]);
@@ -107,7 +106,7 @@ export function summarizeDeposit(lease: Lease, proposal: Proposal | null): Depos
       const needsMe = lease.allowedActions.includes('accept_proposal');
       return done(
         formatUsd(deductions),
-        needsMe ? 'needs your review' : `awaiting ${tenant}'s response`,
+        'Deductions under review',
         needsMe ? 'attention' : 'neutral',
         present(original, refund(), held),
       );
@@ -116,23 +115,23 @@ export function summarizeDeposit(lease: Lease, proposal: Proposal | null): Depos
     case 'accepted':
       return done(
         formatUsd(deductions),
-        viewer === 'landlord' ? 'being paid to you' : `being paid to ${landlord}`,
+        viewer === 'landlord' ? 'Deductions being paid to you' : `Deductions being paid to ${landlord}`,
         'neutral',
         present(original, refund()),
       );
 
     case 'disputed':
-      return done(formatUsd(funds.held), 'held while the dispute is reviewed', 'neutral', present(original, refund()));
+      return done(formatUsd(funds.held), 'Held until the dispute is resolved', 'neutral', present(original, refund()));
 
     case 'settled': {
       const paid = funds.paidToLandlordConfirmed;
       if (viewer === 'landlord' && isPositive(paid)) {
-        return withDetail(done(formatUsd(paid), 'paid to you', 'outcome', present(original, refund())), SETTLED_DETAIL);
+        return withDetail(done(formatUsd(paid), 'Paid to you', 'outcome', present(original, refund())), SETTLED_DETAIL);
       }
       return withDetail(
         done(
           formatUsd(funds.returnedConfirmed),
-          viewer === 'tenant' ? 'returned to you' : `returned to ${tenant}`,
+          viewer === 'tenant' ? 'Returned to you' : `Returned to ${tenant}`,
           'outcome',
           [
             original,

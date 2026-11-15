@@ -41,14 +41,6 @@ function waitingText(lease: Lease): string | undefined {
   }
 }
 
-function refundSentence(lease: Lease, viewer: Role): string {
-  const owner = viewer === 'tenant' ? 'Your' : "The tenant's";
-  const { returnedConfirmed, returnedPending } = lease.funds;
-  if (isPositive(returnedConfirmed)) return `${owner} refund of ${formatUsd(returnedConfirmed)} is confirmed.`;
-  if (isPositive(returnedPending)) return `${owner} refund of ${formatUsd(returnedPending)} is processing.`;
-  return '';
-}
-
 export function describeLease(lease: Lease, proposal: Proposal | null): NextAction {
   const viewer = lease.viewer.role;
   const tenant = party(lease, 'tenant');
@@ -110,17 +102,15 @@ export function describeLease(lease: Lease, proposal: Proposal | null): NextActi
       if (allowed.has('accept_proposal')) {
         return {
           headline: `${landlord.displayName} proposed ${formatUsd(deductions)} in deductions.`,
-          detail: joinSentences(refundSentence(lease, viewer), `${formatUsd(funds.held)} stays held until you accept or dispute.`),
+          // Disputing does not release money: the amount stays held until it is accepted or the dispute is resolved.
+          detail: 'This amount stays held until you accept the deductions or a dispute is resolved.',
           primary: { kind: 'link', to: 'review', label: 'Review deductions', variant: 'primary' },
         };
       }
       return {
         headline: `${tenant.displayName} is reviewing your proposal.`,
-        detail: joinSentences(
-          `You proposed ${formatUsd(deductions)} in deductions.`,
-          refundSentence(lease, viewer),
-          `${formatUsd(funds.held)} stays held until they respond.`,
-        ),
+        // The actor is named once, in `waiting`. This sentence only states the hold rule.
+        detail: 'This amount stays held until the deductions are accepted or a dispute is resolved.',
         waiting: waitingText(lease),
         primary: { kind: 'link', to: 'review', label: 'View submitted proposal', variant: 'secondary' },
       };
@@ -129,7 +119,7 @@ export function describeLease(lease: Lease, proposal: Proposal | null): NextActi
     case 'accepted':
       return {
         headline: viewer === 'tenant' ? 'You accepted the deductions.' : `${tenant.displayName} accepted the deductions.`,
-        detail: `${formatUsd(deductions)} is being paid to ${viewer === 'landlord' ? 'you' : landlord.displayName}. Settlement completes when every transfer is confirmed.`,
+        detail: viewer === 'tenant' ? 'You accepted the deductions.' : `${tenant.displayName} accepted the deductions.`,
         waiting: waitingText(lease),
         primary: { kind: 'link', to: 'review', label: 'View proposal', variant: 'secondary' },
       };
@@ -139,7 +129,7 @@ export function describeLease(lease: Lease, proposal: Proposal | null): NextActi
       const who = viewer === 'tenant' ? 'You disputed' : `${tenant.displayName} disputed`;
       return {
         headline: 'Awaiting review',
-        detail: `${who} ${pluralize(count, 'deduction')}. ${formatUsd(funds.held)} stays held until the dispute is resolved.`,
+        detail: `${who} ${pluralize(count, 'deduction')}.`,
         waiting: waitingText(lease),
         primary: { kind: 'link', to: 'review', label: 'View dispute', variant: 'secondary' },
       };
