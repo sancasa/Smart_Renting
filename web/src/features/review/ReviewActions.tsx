@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { ConfirmDialog } from '../../components/ConfirmDialog';
 import { Field } from '../../components/Field';
 import { newIdempotencyKey } from '../../lib/idempotency';
-import { formatUsd, isZero } from '../../lib/money';
+import { formatUsd, formatUsdWhole, isZero } from '../../lib/money';
 import type { ServiceError } from '../../services/errors';
 import { useMutation } from '../../services/hooks';
 import { useServices } from '../../services/ServiceContext';
 import { useLeaseContext } from '../lease/LeaseLayout';
 import type { Lease, Proposal } from '../../services/types';
+import { refundStatusSentence } from './reviewFinancials';
 
 function person(lease: Lease, role: 'tenant' | 'landlord') {
   return lease.participants.find((p) => p.role === role)?.displayName ?? role;
@@ -142,6 +143,8 @@ export function RespondPanel({ lease, proposal }: { lease: Lease; proposal: Prop
   const landlord = person(lease, 'landlord');
   const canDispute = lease.allowedActions.includes('dispute_proposal');
   const canAccept = lease.allowedActions.includes('accept_proposal');
+  // The action names exactly what it does, using the proposal total, and keeps that name in the dialog.
+  const acceptLabel = `Accept ${formatUsdWhole(proposal.deductionTotal)} in deductions`;
 
   const closeAccept = () => {
     setAccepting(false);
@@ -163,12 +166,14 @@ export function RespondPanel({ lease, proposal }: { lease: Lease; proposal: Prop
         Your response
       </h2>
       <p>
-        Your {formatUsd(proposal.refundAmount)} refund is separate.
+        This decision is about the {formatUsd(proposal.deductionTotal)} in deductions only. Accepting pays them to {landlord} from the
+        held deposit. Disputing keeps them held until the dispute is resolved.
       </p>
+      <p>{refundStatusSentence(lease, proposal)}</p>
       <div className="button-row">
         {canAccept && (
           <button type="button" className="button button--primary" onClick={() => setAccepting(true)}>
-            Accept deductions
+            {acceptLabel}
           </button>
         )}
         {canDispute && (
@@ -180,8 +185,8 @@ export function RespondPanel({ lease, proposal }: { lease: Lease; proposal: Prop
 
       <ConfirmDialog
         open={accepting}
-        title="Accept these deductions?"
-        confirmLabel="Accept deductions"
+        title={`${acceptLabel}?`}
+        confirmLabel={acceptLabel}
         busyLabel="Accepting…"
         busy={pending}
         confirmDisabled={error?.code === 'stale_proposal'}
@@ -205,7 +210,7 @@ export function RespondPanel({ lease, proposal }: { lease: Lease; proposal: Prop
         <Facts
           rows={[
             [`Paid to ${landlord} from the held deposit`, formatUsd(proposal.deductionTotal)],
-            ['Your refund, unchanged', formatUsd(proposal.refundAmount)],
+            ['Your refund, a separate transfer', formatUsd(proposal.refundAmount)],
           ]}
         />
       </ConfirmDialog>

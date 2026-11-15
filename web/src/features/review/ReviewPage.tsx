@@ -109,7 +109,7 @@ export function ReviewPage() {
 
           <section className="stack" aria-labelledby={findingsId}>
             <h2 id={findingsId} className="section-title">
-              Findings ({proposal.items.filter((i) => i.included).length})
+              {mode === 'respond' ? 'Proposed charges' : 'Findings'} ({proposal.items.filter((i) => i.included).length})
             </h2>
             {proposal.items.length === 0 ? (
               <p className="surface">No deductions were proposed.</p>
@@ -129,9 +129,18 @@ export function ReviewPage() {
           </section>
 
           {mode === 'disputed' && proposal.dispute && <DisputeSummary lease={lease} proposal={proposal} />}
-          {mode === 'draft' ? <ProposalHistory proposal={proposal} /> : <ProposalDetails lease={lease} proposal={proposal} />}
-          {mode === 'draft' && <DraftSubmit lease={lease} proposal={proposal} hasUnsavedEdits={dirtyIds.size > 0} />}
-          {mode === 'respond' && <RespondPanel lease={lease} proposal={proposal} />}
+          {mode === 'respond' ? (
+            // Tenant deduction review: the decision comes right after the charges; the record sits last, collapsed.
+            <>
+              <RespondPanel lease={lease} proposal={proposal} />
+              <ProposalDetails lease={lease} proposal={proposal} />
+            </>
+          ) : (
+            <>
+              {mode === 'draft' ? <ProposalHistory proposal={proposal} /> : <ProposalDetails lease={lease} proposal={proposal} />}
+              {mode === 'draft' && <DraftSubmit lease={lease} proposal={proposal} hasUnsavedEdits={dirtyIds.size > 0} />}
+            </>
+          )}
         </>
       )}
     </div>
