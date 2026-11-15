@@ -12,3 +12,18 @@ export function formatDateTime(iso: string): string {
 export function pluralize(count: number, singular: string, plural = `${singular}s`): string {
   return `${count} ${count === 1 ? singular : plural}`;
 }
+
+const firstCharacter = (word: string): string => Array.from(word)[0] ?? '';
+
+/** Up to two initials for an avatar: first and last name, or the first two letters of a single name. */
+export function initialsOf(name: string): string {
+  const words = name.trim().split(/[\s-]+/).filter(Boolean);
+  if (words.length === 0) return '?';
+  const first = firstCharacter(words[0]);
+  const second = words.length > 1 ? firstCharacter(words[words.length - 1]) : (Array.from(words[0])[1] ?? '');
+  return (first + second).toUpperCase();
+}
+
+export function roleLabel(role: 'tenant' | 'landlord'): string {
+  return role === 'tenant' ? 'Tenant' : 'Landlord';
+}

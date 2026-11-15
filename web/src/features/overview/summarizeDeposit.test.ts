@@ -114,4 +114,44 @@ describe('summarizeDeposit', () => {
     const broken = { ...lease, funds: { ...lease.funds, returnedConfirmed: lease.funds.returnedPending } };
     expect(summarizeDeposit(broken, selectProposal(state, 'tenant'))).toBeNull();
   });
+
+  describe('adapts to how much there is to show', () => {
+    it('keeps the full breakdown when several values are meaningful', () => {
+      const pending = summaryFor('refund_pending', 'tenant');
+      expect(pending.quiet).toBeUndefined();
+      expect(pending.facts.map((f) => f.label)).toEqual(['Original deposit', 'Refund to you', 'Still held']);
+      const settled = summaryFor('settled', 'tenant');
+      expect(settled.quiet).toBeUndefined();
+      expect(settled.facts.map((f) => f.label)).toEqual(['Original deposit', 'Deductions']);
+    });
+
+    it('shows the original deposit as a quiet line when it is the only supporting value', () => {
+      const s = summaryFor('move_out', 'landlord');
+      expect(s.facts).toEqual([]);
+      expect(s.quiet).toMatchObject({ label: 'Original deposit', value: '$1,000.00' });
+    });
+
+    it('has nothing to add at all while the deposit is simply held', () => {
+      const s = summaryFor('active', 'tenant');
+      expect(s.facts).toEqual([]);
+      expect(s.quiet).toBeUndefined();
+    });
+
+    it('does not give a $0.00 deductions row its own column', () => {
+      let state = buildScenario('move_out', now);
+      state = saveDraft(
+        state,
+        [
+          { itemId: 'finding-wall', included: false },
+          { itemId: 'finding-carpet', included: false },
+        ],
+        now,
+      );
+      state = submitProposal(state, state.proposal.version, now);
+      const processing = summarizeDeposit(selectLease(state, 'tenant'), selectProposal(state, 'tenant'))!;
+      expect(processing.facts).toEqual([]);
+      expect(processing.quiet).toMatchObject({ label: 'Original deposit', value: '$1,000.00' });
+      expect(processing.label).toBe('Full refund processing');
+    });
+  });
 });

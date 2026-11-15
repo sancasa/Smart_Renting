@@ -18,6 +18,8 @@ export interface Fact {
   /** Small plain-language state under the label, such as "Confirmed" or "Processing". */
   note?: string;
   processing?: boolean;
+  /** A zero-value row. It is true but not a meaningful extra value, so it does not earn a breakdown. */
+  empty?: boolean;
 }
 
 export interface DepositSummary {
@@ -25,7 +27,10 @@ export interface DepositSummary {
   /** Says what the amount is, shown above it, e.g. "Deductions under review". */
   label: string;
   tone: FigureTone;
+  /** The full breakdown. Only present when more than the original deposit is worth showing. */
   facts: Fact[];
+  /** When "Original deposit" is the only meaningful supporting value, it is a quiet line under the amount. */
+  quiet?: Fact;
   /** Replaces the generic sentence when the headline already says it all (the settled outcome). */
   detail?: string;
   /** True when any transfer is still processing, so the page can explain how it is counted. */
@@ -78,13 +83,15 @@ export function summarizeDeposit(lease: Lease, proposal: Proposal | null): Depos
     return null;
   };
   const present = (...facts: (Fact | null)[]): Fact[] => facts.filter((f): f is Fact => f !== null);
-  const done = (figure: string, label: string, tone: FigureTone, facts: Fact[]): DepositSummary => ({
-    figure,
-    label,
-    tone,
-    facts,
-    hasProcessing,
-  });
+  const done = (figure: string, label: string, tone: FigureTone, facts: Fact[]): DepositSummary => {
+    // A breakdown is for several meaningful values. With only the original deposit (or a zero row)
+    // to add, a quiet line under the amount says it without a separate box or column.
+    const meaningful = facts.filter((fact) => fact.id !== 'original' && !fact.empty);
+    if (meaningful.length === 0) {
+      return { figure, label, tone, facts: [], quiet: facts.find((fact) => fact.id === 'original'), hasProcessing };
+    }
+    return { figure, label, tone, facts, hasProcessing };
+  };
 
   switch (lease.phase) {
     case 'active':
@@ -100,7 +107,7 @@ export function summarizeDeposit(lease: Lease, proposal: Proposal | null): Depos
       if (!isPositive(deductions)) {
         return done(formatUsd(proposal?.refundAmount ?? funds.original), 'Full refund processing', 'neutral', [
           original,
-          { id: 'deductions', label: 'Deductions', value: formatUsd('0') },
+          { id: 'deductions', label: 'Deductions', value: formatUsd('0'), empty: true },
         ]);
       }
       const needsMe = lease.allowedActions.includes('accept_proposal');
@@ -140,6 +147,7 @@ export function summarizeDeposit(lease: Lease, proposal: Proposal | null): Depos
               label: 'Deductions',
               value: formatUsd(paid),
               note: isPositive(paid) ? `Paid to ${landlord}` : undefined,
+              empty: !isPositive(paid),
             },
           ],
         ),
