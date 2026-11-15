@@ -11,6 +11,9 @@
 - Money accounting: integer base units (bigint), each unit in exactly one bucket (confirmed returned, confirmed paid, processing, held); refuses to display amounts that do not reconcile.
 - Landlord draft (edit/remove charges, history kept apart from edits), submit, zero-deduction path, tenant accept (exact version) / dispute, stale-version handling, duplicate-submit protection (idempotency keys).
 
+- Lease overview redesign (checkpoint 2, overview only): one deposit summary panel with the headline amount (e.g. "$880.00 returned to you", "$120.00 needs your review") and receipt-style supporting facts; compact header and demo bar; slim progress line; Evidence and Recent activity as disclosure rows. Review layout unchanged apart from the shared compact header/demo bar.
+  Evidence: `npm run typecheck`, `npm test` (43 tests), `npm run build` pass; awaiting-response and settled states inspected at 1440, 390 and 320 px (no overflow, targets at least 40px).
+
 ## Still simulated / not built
 - Everything runs on `web/src/services/sample/`. No backend, wallet, contract, AI or storage is connected.
 - The live adapter (`web/src/services/live/`) intentionally throws `integration_blocked` for every call.
