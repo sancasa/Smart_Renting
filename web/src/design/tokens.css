@@ -1,0 +1,59 @@
+/*
+ * Design tokens. Recommended direction from the brief (warm off-white, white working
+ * surfaces, charcoal text, restrained deep teal). Not a replacement for team branding.
+ * Color carries meaning, and every colored status is also written out in words.
+ */
+:root {
+  /* Color */
+  --color-paper: #f6f3ee;
+  --color-surface: #ffffff;
+  --color-text: #26292b;
+  --color-muted: #5c6165;
+  --color-border: #ddd8cf;
+  --color-border-strong: #8b867c;
+  --color-teal: #0e5c63;
+  --color-teal-dark: #0a464b;
+  --color-teal-tint: #e4f0f0;
+  --color-caution: #7a5000;
+  --color-caution-tint: #fbf1dc;
+  --color-problem: #a63a2b;
+  --color-problem-tint: #fbe9e6;
+
+  /* Type: one family. Source Sans 3 is the maintained Source Sans Pro the project already used. */
+  --font-sans: 'Source Sans 3', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --text-small: 0.875rem;
+  --text-body: 1rem;
+  --text-large: 1.125rem;
+  --text-section: 1.25rem;
+  --text-title: 1.5rem;
+  --text-display: 1.875rem;
+  --leading-tight: 1.2;
+  --leading-body: 1.5;
+
+  /* Spacing, 4px base */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+
+  /* Shape */
+  --radius-control: 6px;
+  --radius-surface: 10px;
+  --border: 1px solid var(--color-border);
+
+  /* Layout */
+  --page-max: 1120px;
+  --gutter: 1rem;
+  --target-min: 2.75rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 1.5rem;
+    --text-title: 1.75rem;
+    --text-display: 2.125rem;
+  }
+}
