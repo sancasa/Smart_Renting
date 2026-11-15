@@ -56,6 +56,8 @@
   --page-max: 1120px;
   --gutter: 1rem;
   --target-min: 2.75rem;
+  /* Real height of the sticky top bar. SiteTop updates this at runtime; this is the fallback. */
+  --top-h: 5.25rem;
 }
 
 @media (min-width: 768px) {

@@ -6,7 +6,8 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  scroll-padding-top: var(--space-6);
+  /* Keeps anything scrolled into view (focus, anchors) clear of the sticky top bar. */
+  scroll-padding-top: calc(var(--top-h) + var(--space-4));
 }
 
 body {
@@ -42,6 +43,11 @@ h2,
 h3 {
   line-height: var(--leading-tight);
   font-weight: 700;
+}
+
+/* Headings take focus after navigation so readers land on the new page. They are not controls. */
+h1[tabindex='-1']:focus {
+  outline: none;
 }
 
 a {

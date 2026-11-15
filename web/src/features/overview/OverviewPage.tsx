@@ -1,7 +1,8 @@
-import { useId, useRef, useState, type ReactNode } from 'react';
+import { useId, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ConfirmDialog } from '../../components/ConfirmDialog';
-import { MilestoneBar } from '../../components/MilestoneBar';
+import { Disclosure } from '../../components/Disclosure';
+import { LifecycleTimeline } from '../../components/LifecycleTimeline';
 import { formatDate, formatDateTime } from '../../lib/format';
 import { newIdempotencyKey } from '../../lib/idempotency';
 import { useMutation } from '../../services/hooks';
@@ -20,9 +21,11 @@ export function OverviewPage() {
   const me = lease.participants.find((p) => p.id === lease.viewer.userId);
 
   return (
-    <div className="page overview">
+    <div className="overview">
       <div className="overview__title">
-        <h1 className="overview__property">{lease.property.label}</h1>
+        <h1 className="overview__property" tabIndex={-1}>
+          {lease.property.label}
+        </h1>
         <ul className="overview__people" aria-label="People on this lease">
           {lease.participants.map((person) => (
             <li key={person.id}>
@@ -32,6 +35,8 @@ export function OverviewPage() {
           ))}
         </ul>
       </div>
+
+      <LifecycleTimeline stage={lease.stage} complete={lease.phase === 'settled'} />
 
       {summary ? (
         <DepositSummaryPanel
@@ -47,8 +52,6 @@ export function OverviewPage() {
           <p>They don't add up to the original deposit, so we won't display numbers we can't stand behind. Reload to try again.</p>
         </section>
       )}
-
-      <MilestoneBar stage={lease.stage} complete={lease.phase === 'settled'} />
 
       <Folds lease={lease} />
     </div>
@@ -116,27 +119,6 @@ function MoveOutAction({ lease, label, className }: { lease: Lease; label: strin
   );
 }
 
-function Chevron() {
-  return (
-    <svg className="fold__chevron" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false">
-      <path d="m4.5 7 4.5 4.5L13.5 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function Fold({ title, meta, children }: { title: string; meta: string; children: ReactNode }) {
-  return (
-    <details className="fold">
-      <summary className="fold__summary">
-        <span className="fold__title">{title}</span>
-        <span className="fold__meta">{meta}</span>
-        <Chevron />
-      </summary>
-      <div className="fold__body">{children}</div>
-    </details>
-  );
-}
-
 /** Evidence and recent activity: open rows, not cards, so the summary stays the one focal surface. */
 function Folds({ lease }: { lease: Lease }) {
   // Oldest-first sort is stable, so entries sharing a timestamp keep their recorded order; reversing gives newest first.
@@ -145,7 +127,7 @@ function Folds({ lease }: { lease: Lease }) {
   const evidenceCount = lease.evidence.length;
   return (
     <div className="folds">
-      <Fold title="Evidence" meta={`${evidenceCount} ${evidenceCount === 1 ? 'item' : 'items'}`}>
+      <Disclosure title="Evidence" meta={`${evidenceCount} ${evidenceCount === 1 ? 'item' : 'items'}`}>
         <ul className="fold__rows">
           {lease.evidence.map((entry) => (
             <li key={entry.id} className="fold__row fold__row--stacked">
@@ -154,9 +136,9 @@ function Folds({ lease }: { lease: Lease }) {
             </li>
           ))}
         </ul>
-      </Fold>
+      </Disclosure>
 
-      <Fold title="Recent activity" meta={events[0]?.text ?? 'Nothing yet'}>
+      <Disclosure title="Recent activity" meta={events[0]?.text ?? 'Nothing yet'}>
         <p className="fold__note">
           {receipts.length === 0
             ? 'Demo data: these entries are simulated, and there are no transaction receipts to show.'
@@ -176,7 +158,7 @@ function Folds({ lease }: { lease: Lease }) {
             </li>
           ))}
         </ul>
-      </Fold>
+      </Disclosure>
     </div>
   );
 }

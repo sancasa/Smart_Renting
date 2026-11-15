@@ -194,7 +194,7 @@ export function FindingEditor({ leaseId, item, onDirtyChange }: FindingEditorPro
             {toggle.pending ? 'Removing…' : 'Remove charge'}
           </button>
         </div>
-        <p role="status" className="small muted">
+        <p role="status" className="small muted save-status">
           {saved && !dirty ? 'Saved.' : ''}
         </p>
       </form>

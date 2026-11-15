@@ -163,7 +163,7 @@ export function RespondPanel({ lease, proposal }: { lease: Lease; proposal: Prop
         Your response
       </h2>
       <p>
-        Applies to version {proposal.version}. Your {formatUsd(proposal.refundAmount)} refund is separate.
+        Your {formatUsd(proposal.refundAmount)} refund is separate.
       </p>
       <div className="button-row">
         {canAccept && (

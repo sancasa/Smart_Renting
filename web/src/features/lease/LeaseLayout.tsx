@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
-import { Outlet, useLocation, useMatch, useOutletContext, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useMatch, useNavigationType, useOutletContext, useParams } from 'react-router-dom';
 import { ErrorState } from '../../components/ErrorState';
-import { Header } from '../../components/Header';
+import { SiteTop } from '../../components/SiteTop';
 import { useLeaseData, type LeaseData } from '../../services/hooks';
 
 export interface LeaseOutletContext extends LeaseData {
@@ -14,61 +14,48 @@ export function useLeaseContext(): LeaseOutletContext {
   return useOutletContext<LeaseOutletContext>();
 }
 
-/** Loads the lease once for both surfaces and keeps the header, focus and loading states consistent. */
+/**
+ * Loads the lease once for both screens and owns the single centered content container, the
+ * sticky top bar, and navigation behavior: after moving between screens the reader lands on the
+ * new page heading with keyboard focus there, instead of wherever the old scroll position was.
+ */
 export function LeaseLayout() {
   const { leaseId = '' } = useParams();
   const { data, error, loading, reload, reloadNow } = useLeaseData(leaseId);
   const location = useLocation();
-  // The overview names the property in its main content, so its header stays compact.
-  const onOverview = useMatch({ path: '/leases/:leaseId', end: true }) !== null;
+  const navigationType = useNavigationType();
   const mainRef = useRef<HTMLElement>(null);
   const firstRender = useRef(true);
+  // The overview names the property in its main content, so its header stays compact.
+  const onOverview = useMatch({ path: '/leases/:leaseId', end: true }) !== null;
 
-  // After navigating between overview and review, move focus to the new page so keyboard
-  // and screen reader users start at the top of it.
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
       return;
     }
-    mainRef.current?.focus();
-  }, [location.pathname]);
+    // A new screen starts at its top. Back/forward keeps the browser's own scroll restoration.
+    if (navigationType !== 'POP') window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    mainRef.current?.querySelector<HTMLElement>('h1')?.focus({ preventScroll: true });
+  }, [location.pathname, navigationType]);
 
-  if (error && !data) {
+  const content = (() => {
+    if (error && !data) return <ErrorState error={error} onRetry={reload} />;
+    if (!data) return <p role="status">Loading your deposit…</p>;
+    const context: LeaseOutletContext = { ...data, reload, reloadNow };
     return (
       <>
-        <Header />
-        <main id="main" className="main" tabIndex={-1} ref={mainRef}>
-          <ErrorState error={error} onRetry={reload} />
-        </main>
+        {error && <ErrorState error={error} onRetry={reload} />}
+        <Outlet context={context} />
       </>
     );
-  }
+  })();
 
-  if (!data) {
-    return (
-      <>
-        <Header />
-        <main id="main" className="main" tabIndex={-1} ref={mainRef}>
-          <div className="page">
-            <p role="status">Loading your deposit…</p>
-          </div>
-        </main>
-      </>
-    );
-  }
-
-  const context: LeaseOutletContext = { ...data, reload, reloadNow };
   return (
     <>
-      <Header lease={data.lease} showProperty={!onOverview} />
+      <SiteTop lease={data?.lease} showProperty={!onOverview} />
       <main id="main" className="main" tabIndex={-1} ref={mainRef} aria-busy={loading}>
-        {error && (
-          <div className="page">
-            <ErrorState error={error} onRetry={reload} />
-          </div>
-        )}
-        <Outlet context={context} />
+        <div className="page">{content}</div>
       </main>
     </>
   );

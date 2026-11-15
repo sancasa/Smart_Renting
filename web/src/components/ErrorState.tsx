@@ -5,7 +5,7 @@ export function ErrorState({ error, onRetry }: { error: ServiceError; onRetry: (
   const blocked = error.code === 'integration_blocked';
   const noAccess = error.code === 'unauthorized';
   return (
-    <div className="page stack">
+    <div className="stack">
       <div role="alert" className={`callout ${blocked ? 'callout--caution' : 'callout--problem'}`}>
         <h1 className="callout__title">
           {blocked ? 'Not connected yet' : noAccess ? "You can't open this lease" : "This didn't load"}

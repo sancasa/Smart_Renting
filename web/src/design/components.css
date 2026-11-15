@@ -60,8 +60,16 @@
   white-space: nowrap;
 }
 
-/* ---------- Demo bar (sample mode only) ---------- */
-/* Visible on every screen but deliberately quiet: neutral, slim, and collapsed by default. */
+/* ---------- Sticky top bar ---------- */
+/* Notice row plus header, always one compact block. Nothing inside it expands. */
+.site-top {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+/* ---------- Demo notice (sample mode only) ---------- */
+/* Visible but deliberately quiet: neutral, slim, and its controls stay closed. */
 .demo-bar {
   background: var(--color-demo-bg);
   border-bottom: 1px solid var(--color-border);
@@ -73,7 +81,6 @@
   align-items: center;
   gap: var(--space-2) var(--space-4);
   min-height: 2.5rem;
-  padding-block: var(--space-1);
 }
 
 .demo-bar__label {
@@ -82,6 +89,7 @@
   border-radius: var(--radius-control);
   font-size: var(--text-small);
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .demo-bar__hint {
@@ -89,24 +97,13 @@
   font-size: var(--text-small);
 }
 
-.demo-bar__panel-hint {
-  font-size: var(--text-small);
-}
-
 @media (min-width: 720px) {
   .demo-bar__hint {
     display: block;
   }
-
-  .demo-bar__panel-hint {
-    display: none;
-  }
 }
 
 .demo-bar__toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
   margin-left: auto;
   min-height: 2.5rem;
   padding: 0 0 0 var(--space-2);
@@ -117,29 +114,8 @@
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 0.2em;
+  white-space: nowrap;
   cursor: pointer;
-}
-
-.demo-bar__chevron {
-  transition: transform 120ms ease;
-}
-
-.demo-bar__toggle[aria-expanded='true'] .demo-bar__chevron {
-  transform: rotate(180deg);
-}
-
-.demo-bar__panel[hidden] {
-  display: none;
-}
-
-.demo-bar__panel {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
-  align-items: start;
-  gap: var(--space-4) var(--space-6);
-  padding-block: var(--space-4);
-  color: var(--color-text);
-  border-top: 1px solid var(--color-border);
 }
 
 .demo-bar__group {
@@ -174,10 +150,6 @@
   border-radius: var(--radius-control);
 }
 
-.demo-bar__wide {
-  grid-column: 1 / -1;
-}
-
 .demo-bar__list {
   padding-left: var(--space-6);
   list-style: disc;
@@ -194,10 +166,10 @@
 
 .site-header__row {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  column-gap: var(--space-6);
+  gap: var(--space-6);
+  min-height: var(--target-min);
 }
 
 .site-header__brand {
@@ -211,13 +183,22 @@
   white-space: nowrap;
 }
 
-/* On narrow screens the property gets its own line instead of squeezing the brand and account. */
+/* The property shows in the header on wider screens. Narrow screens keep the header to one row
+   and show the property in the page instead (see .review-property). */
 .site-header__context {
-  flex: 1 0 100%;
-  order: 3;
+  display: none;
+  flex: 1 1 0;
   min-width: 0;
-  padding-bottom: var(--space-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: var(--color-muted);
+}
+
+@media (min-width: 640px) {
+  .site-header__context {
+    display: block;
+  }
 }
 
 .site-header__account {
@@ -225,14 +206,6 @@
   color: var(--color-muted);
   text-align: right;
   white-space: nowrap;
-}
-
-@media (min-width: 640px) {
-  .site-header__context {
-    flex: 1 1 12rem;
-    order: 0;
-    padding-bottom: 0;
-  }
 }
 
 /* ---------- Buttons ---------- */
@@ -386,44 +359,6 @@
   border-color: var(--color-border-soft);
 }
 
-/* ---------- Disclosure (Evidence, Activity, history) ---------- */
-.disclosure {
-  background: var(--color-surface);
-  border: var(--border);
-  border-radius: var(--radius-surface);
-}
-
-.disclosure__summary {
-  display: flex;
-  align-items: center;
-  min-height: var(--target-min);
-  padding: var(--space-2) var(--space-4);
-  font-weight: 700;
-  font-size: var(--text-large);
-  cursor: pointer;
-}
-
-.disclosure__body {
-  display: grid;
-  gap: var(--space-3);
-  padding: 0 var(--space-4) var(--space-4);
-}
-
-.list-rows {
-  display: grid;
-}
-
-.list-rows__item {
-  display: grid;
-  gap: var(--space-1);
-  padding-block: var(--space-3);
-  border-top: var(--border);
-}
-
-.list-rows__item:first-child {
-  border-top: 0;
-}
-
 /* ---------- Callouts and tags ---------- */
 .callout {
   padding: var(--space-3) var(--space-4);
@@ -494,9 +429,14 @@
     align-items: start;
   }
 
+}
+
+/* The refund breakdown stays in view while reading evidence, but only when the window is tall
+   enough to hold it. Otherwise it flows with the page, as it always does on mobile. */
+@media (min-width: 960px) and (min-height: 640px) {
   .review-grid__summary {
     position: sticky;
-    top: var(--space-4);
+    top: calc(var(--top-h) + var(--space-4));
   }
 }
 
@@ -671,7 +611,7 @@
 /* ---------- Dialog ---------- */
 .dialog {
   width: min(32rem, calc(100vw - 2rem));
-  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
   overflow: auto;
   padding: var(--space-6);
   border: 0;
@@ -888,55 +828,100 @@
   }
 }
 
-/* Progress is context, not the task. A completed step is solid; the step in progress is outlined. */
-.progress {
-  display: grid;
-  gap: var(--space-2);
-}
-
-.progress__text {
-  font-size: var(--text-small);
-  color: var(--color-muted);
-}
-
-.progress__bar {
+/* The lifecycle as a connected timeline: filled = done, ringed = in progress, hollow = upcoming. */
+.timeline__list {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: var(--space-2);
+  margin: 0;
 }
 
-.progress__step {
+.timeline__step {
+  position: relative;
   display: grid;
+  justify-items: center;
+  align-content: start;
   gap: var(--space-1);
+  text-align: center;
 }
 
-.progress__segment {
-  height: 8px;
-  border-radius: 4px;
+/* The line runs from the previous node's centre to this node's centre, behind both nodes. */
+.timeline__step::before {
+  content: '';
+  position: absolute;
+  top: calc(0.75rem - 1px);
+  right: 50%;
+  width: 100%;
+  height: 2px;
   background: var(--color-border);
 }
 
-.progress__step--done .progress__segment {
+.timeline__step:first-child::before {
+  display: none;
+}
+
+.timeline__step--done::before,
+.timeline__step--current::before {
   background: var(--color-teal);
 }
 
-.progress__step--current .progress__segment {
-  background: var(--color-money);
-  box-shadow: inset 0 0 0 2px var(--color-teal);
+.timeline__node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--color-border-strong);
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: #ffffff;
 }
 
-.progress__name {
+.timeline__step--done .timeline__node {
+  background: var(--color-teal);
+  border-color: var(--color-teal);
+}
+
+.timeline__step--current .timeline__node {
+  border-color: var(--color-teal);
+  background: var(--color-money);
+}
+
+.timeline__step--current .timeline__node::after {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-teal);
+}
+
+.timeline__label {
   font-size: var(--text-small);
   color: var(--color-muted);
 }
 
-.progress__step--current .progress__name {
+.timeline__step--current .timeline__label {
   font-weight: 700;
   color: var(--color-text);
 }
 
-@media (max-width: 719px) {
-  .progress__name {
+.timeline__note {
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+.timeline__summary {
+  display: none;
+  margin-top: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--color-muted);
+  text-align: center;
+}
+
+/* Five labels need about 380px. Below that, write the current step out once instead. */
+@media (max-width: 379px) {
+  .timeline__label,
+  .timeline__note {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -944,6 +929,10 @@
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
+  }
+
+  .timeline__summary {
+    display: block;
   }
 }
 
@@ -1011,6 +1000,7 @@
 
 .fold__chevron {
   flex: none;
+  margin-left: auto;
   color: var(--color-teal);
   transition: transform 120ms ease;
 }
@@ -1059,4 +1049,57 @@
 .fold__row-note {
   font-size: var(--text-small);
   color: var(--color-muted);
+}
+
+/* Disclosures outside the overview's two-column group carry their own bottom rule. */
+.fold--standalone {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.fold__heading {
+  margin-top: var(--space-2);
+  font-size: var(--text-body);
+  font-weight: 600;
+}
+
+.details {
+  display: grid;
+  margin: 0;
+}
+
+.details__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-2);
+  border-top: 1px solid var(--color-border-soft);
+}
+
+.details__row:first-child {
+  border-top: 0;
+}
+
+.details dt {
+  color: var(--color-muted);
+}
+
+.details dd {
+  margin: 0;
+  text-align: right;
+}
+
+/* Reserve the line so "Saved." appearing never nudges the form below it. */
+.save-status {
+  min-height: 1.5em;
+}
+
+/* Narrow screens carry the property here, because the header stays a single row. */
+.review-property {
+  color: var(--color-muted);
+}
+
+@media (min-width: 640px) {
+  .review-property {
+    display: none;
+  }
 }

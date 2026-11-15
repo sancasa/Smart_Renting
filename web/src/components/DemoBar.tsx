@@ -1,59 +1,83 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useServices } from '../services/ServiceContext';
 import type { ScenarioId } from '../services/sample/engine';
+import { Disclosure } from './Disclosure';
 
 /**
- * Sample-only controls. Rendered only when the sample adapter is active, so live mode
- * can never expose a persona switch. It carries the one persistent "simulated" label.
- * Sample transfers are not blockchain transactions and are never shown as verified.
+ * Sample-only. Rendered only when the sample adapter is active, so live mode can never expose
+ * a persona switch. The row keeps the simulated-data label visible and compact; the controls
+ * stay closed until asked for. Sample transfers are not blockchain transactions and are never
+ * shown as verified.
  */
 export function DemoBar() {
-  const { bundle, revision } = useServices();
-  const controls = bundle.sampleControls;
-  const navigate = useNavigate();
+  const { bundle } = useServices();
   const [open, setOpen] = useState(false);
+  if (!bundle.sampleControls) return null;
+
+  return (
+    <>
+      <div className="demo-bar" role="region" aria-label="Demo notice">
+        <div className="page">
+          <div className="demo-bar__row">
+            <p className="demo-bar__label">Demo · simulated data</p>
+            <p className="demo-bar__hint">No real payments or blockchain transactions.</p>
+            <button type="button" className="demo-bar__toggle" aria-haspopup="dialog" onClick={() => setOpen(true)}>
+              Demo controls
+            </button>
+          </div>
+        </div>
+      </div>
+      <DemoControlsDialog open={open} onClose={() => setOpen(false)} />
+    </>
+  );
+}
+
+function DemoControlsDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const { bundle, revision } = useServices();
+  const controls = bundle.sampleControls!;
+  const navigate = useNavigate();
+  const ref = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
   const [scenario, setScenario] = useState<ScenarioId>('active');
   const [notice, setNotice] = useState('');
-  const panelId = useId();
-  if (!controls) return null;
+
+  useEffect(() => {
+    const dialog = ref.current;
+    if (!dialog) return;
+    if (open && !dialog.open) dialog.showModal();
+    if (!open && dialog.open) dialog.close();
+  }, [open]);
 
   void revision; // re-render when sample state changes
   const role = controls.getViewerRole();
-  const goHome = () => navigate(`/leases/${bundle.defaultLeaseId}`);
+  const showResult = () => {
+    navigate(`/leases/${bundle.defaultLeaseId}`);
+    onClose();
+  };
 
   return (
-    <div className="demo-bar" role="region" aria-label="Demo controls">
-      <div className="page">
-        <div className="demo-bar__row">
-          <p className="demo-bar__label">Demo · simulated data</p>
-          <p className="demo-bar__hint">No real payments or blockchain transactions.</p>
-          <button
-            type="button"
-            className="demo-bar__toggle"
-            aria-expanded={open}
-            aria-controls={panelId}
-            onClick={() => setOpen((value) => !value)}
-          >
-            {open ? 'Hide demo controls' : 'Show demo controls'}
-            <svg className="demo-bar__chevron" width="16" height="16" viewBox="0 0 18 18" aria-hidden="true" focusable="false">
-              <path d="m4.5 7 4.5 4.5L13.5 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-        </div>
+    <dialog
+      ref={ref}
+      className="dialog"
+      aria-labelledby={titleId}
+      onCancel={(event) => {
+        event.preventDefault();
+        onClose();
+      }}
+    >
+      {open && (
+        <div className="dialog__content">
+          <h2 id={titleId} className="dialog__title">
+            Demo controls
+          </h2>
+          <p className="small muted">Nothing here is a real payment or blockchain transaction.</p>
 
-        <div id={panelId} className="demo-bar__panel" hidden={!open}>
-          <p className="demo-bar__panel-hint demo-bar__wide">Nothing here is a real payment or blockchain transaction.</p>
           <fieldset className="demo-bar__group">
             <legend className="demo-bar__legend">Preview as</legend>
             {(['tenant', 'landlord'] as const).map((value) => (
               <label key={value} className="demo-bar__radio">
-                <input
-                  type="radio"
-                  name="preview-role"
-                  checked={role === value}
-                  onChange={() => controls.setViewerRole(value)}
-                />
+                <input type="radio" name="preview-role" checked={role === value} onChange={() => controls.setViewerRole(value)} />
                 {value === 'tenant' ? 'Tenant' : 'Landlord'}
               </label>
             ))}
@@ -63,12 +87,7 @@ export function DemoBar() {
             <label htmlFor="demo-scenario" className="demo-bar__legend">
               Jump to a state
             </label>
-            <select
-              id="demo-scenario"
-              className="demo-bar__select"
-              value={scenario}
-              onChange={(event) => setScenario(event.target.value as ScenarioId)}
-            >
+            <select id="demo-scenario" className="demo-bar__select" value={scenario} onChange={(event) => setScenario(event.target.value as ScenarioId)}>
               {controls.scenarios.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.label}
@@ -80,7 +99,7 @@ export function DemoBar() {
               className="button button--small"
               onClick={() => {
                 controls.loadScenario(scenario);
-                goHome();
+                showResult();
               }}
             >
               Load state
@@ -88,12 +107,7 @@ export function DemoBar() {
           </div>
 
           <div className="demo-bar__group">
-            <button
-              type="button"
-              className="button button--small"
-              disabled={!controls.hasPendingTransfers()}
-              onClick={() => controls.confirmPendingTransfers()}
-            >
+            <button type="button" className="button button--small" disabled={!controls.hasPendingTransfers()} onClick={() => controls.confirmPendingTransfers()}>
               Confirm pending transfers
             </button>
             <button
@@ -102,9 +116,7 @@ export function DemoBar() {
               disabled={!controls.canMarkProposalOutdated()}
               onClick={() => {
                 controls.markProposalOutdated();
-                setNotice(
-                  'A newer proposal version now exists. An open review page still shows the old one, so accepting it fails until the proposal is reloaded.',
-                );
+                setNotice('A newer proposal version now exists. An open review page still shows the old one, so accepting it fails until the proposal is reloaded.');
               }}
             >
               Make proposal outdated
@@ -114,28 +126,33 @@ export function DemoBar() {
               className="button button--small"
               onClick={() => {
                 controls.reset();
-                goHome();
+                showResult();
               }}
             >
               Reset demo
             </button>
           </div>
 
-          <p role="status" className="small demo-bar__wide">
+          <p role="status" className="small">
             {notice}
           </p>
 
-          <div className="demo-bar__wide">
-            <p className="demo-bar__legend">What this demo assumes</p>
+          <Disclosure title="What this demo assumes" standalone>
             <ul className="demo-bar__list">
               {controls.assumptions.map((text) => (
                 <li key={text}>{text}</li>
               ))}
             </ul>
+            <p className="small muted">Demo state stays in this browser tab only. Don't enter real personal information.</p>
+          </Disclosure>
+
+          <div className="button-row">
+            <button type="button" className="button button--primary" onClick={onClose}>
+              Close
+            </button>
           </div>
-          <p className="small demo-bar__wide">Demo state stays in this browser tab only. Don't enter real personal information.</p>
         </div>
-      </div>
-    </div>
+      )}
+    </dialog>
   );
 }

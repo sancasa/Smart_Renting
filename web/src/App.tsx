@@ -1,6 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { DemoBar } from './components/DemoBar';
-import { Header } from './components/Header';
+import { SiteTop } from './components/SiteTop';
 import { LeaseLayout } from './features/lease/LeaseLayout';
 import { OverviewPage } from './features/overview/OverviewPage';
 import { ReviewPage } from './features/review/ReviewPage';
@@ -14,7 +13,7 @@ function Home() {
 function NotFound() {
   return (
     <>
-      <Header />
+      <SiteTop />
       <main id="main" className="main" tabIndex={-1}>
         <div className="page stack">
           <h1 className="page-title__heading">We can't find that page</h1>
@@ -34,7 +33,6 @@ export default function App() {
         <a className="skip-link" href="#main">
           Skip to main content
         </a>
-        <DemoBar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/leases/:leaseId" element={<LeaseLayout />}>

@@ -1,12 +1,13 @@
 import { useCallback, useId, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MoneySummary, RefundBreakdown } from '../../components/MoneySummary';
-import { formatDate, formatDateTime } from '../../lib/format';
+import { formatDate } from '../../lib/format';
+import { pluralize } from '../../lib/format';
 import { formatUsd } from '../../lib/money';
 import type { Lease, Proposal } from '../../services/types';
 import { useLeaseContext } from '../lease/LeaseLayout';
 import { FindingEditor, FindingView } from './FindingCards';
-import { ProposalHistory } from './ProposalHistory';
+import { ProposalDetails, ProposalHistory } from './ProposalHistory';
 import { DraftSubmit, RespondPanel } from './ReviewActions';
 
 type Mode = 'empty' | 'draft' | 'respond' | 'disputed' | 'settled' | 'readonly';
@@ -25,9 +26,8 @@ function name(lease: Lease, role: 'tenant' | 'landlord') {
   return lease.participants.find((p) => p.role === role)?.displayName ?? role;
 }
 
-function pageCopy(mode: Mode, lease: Lease, proposal: Proposal | null): { title: string; lead: string } {
+function pageCopy(mode: Mode, lease: Lease): { title: string; lead: string } {
   const landlord = name(lease, 'landlord');
-  const submitted = proposal?.submittedAt ? formatDate(proposal.submittedAt) : '';
   switch (mode) {
     case 'draft':
       return {
@@ -37,7 +37,7 @@ function pageCopy(mode: Mode, lease: Lease, proposal: Proposal | null): { title:
     case 'respond':
       return {
         title: 'Review deductions',
-        lead: `Version ${proposal?.version} from ${landlord}, submitted ${submitted}.`,
+        lead: `${landlord} proposed these deductions.`,
       };
     case 'disputed':
       return {
@@ -49,7 +49,7 @@ function pageCopy(mode: Mode, lease: Lease, proposal: Proposal | null): { title:
     case 'readonly':
       return {
         title: lease.viewer.role === 'landlord' ? 'Submitted proposal' : 'Proposal',
-        lead: `Version ${proposal?.version}, submitted ${submitted}. It can't be edited.`,
+        lead: lease.viewer.role === 'landlord' ? "You submitted this proposal. It can't be edited." : `${landlord} submitted this proposal. It can't be edited.`,
       };
     case 'empty':
       return {
@@ -86,17 +86,21 @@ export function ReviewPage() {
   }, []);
 
   const mode = reviewMode(lease, proposal);
-  const { title, lead } = pageCopy(mode, lease, proposal);
+  const { title, lead } = pageCopy(mode, lease);
   const disputedIds = new Set(proposal?.dispute?.itemIds ?? []);
 
   return (
-    <div className="page stack">
+    <div className="stack">
       <Link className="back-link" to={`/leases/${lease.id}`}>
         <BackIcon />
         Back to overview
       </Link>
       <div className="page-title">
-        <h1 className="page-title__heading">{title}</h1>
+        <h1 className="page-title__heading" tabIndex={-1}>
+          {title}
+        </h1>
+        {/* The header carries the property on wider screens; narrow screens show it here instead. */}
+        <p className="review-property">{lease.property.label}</p>
         <p className="lead">{lead}</p>
       </div>
 
@@ -132,7 +136,7 @@ export function ReviewPage() {
               )}
             </section>
 
-            {mode === 'draft' && <ProposalHistory proposal={proposal} />}
+            {mode === 'draft' ? <ProposalHistory proposal={proposal} /> : <ProposalDetails lease={lease} proposal={proposal} />}
             {mode === 'draft' && <DraftSubmit lease={lease} proposal={proposal} hasUnsavedEdits={dirtyIds.size > 0} />}
             {mode === 'respond' && <RespondPanel lease={lease} proposal={proposal} />}
             {mode === 'disputed' && proposal.dispute && <DisputeSummary lease={lease} proposal={proposal} />}
@@ -154,7 +158,7 @@ function DisputeSummary({ lease, proposal }: { lease: Lease; proposal: Proposal 
         The dispute
       </h2>
       <p>
-        {who} submitted this dispute on {formatDateTime(dispute.submittedAt)}, about version {dispute.proposalVersion}.
+        {who} disputed {pluralize(disputed.length, 'deduction')}.
       </p>
       <ul className="list-rows">
         {disputed.map((item) => (
