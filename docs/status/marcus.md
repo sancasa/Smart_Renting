@@ -53,6 +53,8 @@
 
 ## Blocked by / waiting on
 - Team agreement on API payloads, wallet model, escrow transitions (see requests below). None of this blocks the sample-mode work.
+- Branch not yet on GitHub: `git push` to `sancasa/Smart_Renting` returns 403 (no write access for the pushing account). Needs write access or a fork.
+- Demo not yet on Vercel: the Vercel CLI needs a fresh `vercel login`. `web/vercel.json` is ready (SPA rewrite, build pinned to simulated data).
 
 ## Integration requests (proposed types live in `web/src/services/types.ts`; nothing is in `docs/API.md` or `shared/`)
 For the backend owner:
