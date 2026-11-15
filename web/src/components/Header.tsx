@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { Lease } from '../services/types';
+import { AccountMenu } from './AccountMenu';
 
 interface HeaderProps {
   lease?: Lease;
@@ -20,12 +21,7 @@ export function Header({ lease, showProperty = true }: HeaderProps) {
           Deposit Keeper
         </Link>
         {lease && showProperty && <p className="site-header__context">{lease.property.label}</p>}
-        {me && (
-          <p className="site-header__account">
-            <span className="sr-only">Current account: </span>
-            {me.displayName}, {me.role}
-          </p>
-        )}
+        {lease && me && <AccountMenu person={me} propertyLabel={lease.property.label} leaseId={lease.id} />}
       </div>
     </header>
   );

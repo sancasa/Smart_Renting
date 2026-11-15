@@ -13,25 +13,34 @@ interface DepositSummaryPanelProps {
 }
 
 /**
- * The one primary surface on the overview: the headline amount and what it means on the
- * left, and the supporting accounting beside it. Figures are separate buckets, so a
- * processing transfer is never presented as returned or as held.
+ * The one primary surface on the overview: the headline amount and what it means, with the
+ * supporting accounting beside it only when there is more than one meaningful value to show.
+ * With nothing to add, or just the original deposit, the panel sizes to its content: the original
+ * deposit becomes a quiet line under the amount instead of a separate box and column.
+ * Figures are separate buckets, so a processing transfer is never shown as returned or as held.
  */
 export function DepositSummaryPanel({ summary, detail, waiting, action, headingId }: DepositSummaryPanelProps) {
-  const solo = summary.facts.length === 0;
+  const hasBreakdown = summary.facts.length > 0;
   return (
-    <section className={`summary${solo ? ' summary--solo' : ''}`} aria-labelledby={headingId}>
+    <section className={`summary${hasBreakdown ? '' : ' summary--compact'}`} aria-labelledby={headingId}>
       <div className="summary__main">
-        <h2 id={headingId} className="summary__title">
-          <span className="summary__label">{summary.label}</span>
-          <span className={`summary__figure summary__figure--${summary.tone}`}>{summary.figure}</span>
-        </h2>
+        <div className="summary__lead">
+          <h2 id={headingId} className="summary__title">
+            <span className="summary__label">{summary.label}</span>
+            <span className={`summary__figure summary__figure--${summary.tone}`}>{summary.figure}</span>
+          </h2>
+          {summary.quiet && (
+            <p className="summary__quiet">
+              {summary.quiet.label} <span className="amount">{summary.quiet.value}</span>
+            </p>
+          )}
+        </div>
         <p className="summary__detail">{detail}</p>
         {waiting && <p className="summary__waiting">{waiting}</p>}
         {action}
       </div>
 
-      {!solo && (
+      {hasBreakdown && (
         <div className="summary__aside">
           <dl className="facts">
             {summary.facts.map((fact) => (
