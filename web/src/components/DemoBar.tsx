@@ -21,7 +21,6 @@ export function DemoBar() {
         <div className="page">
           <div className="demo-bar__row">
             <p className="demo-bar__label">Demo · simulated data</p>
-            <p className="demo-bar__hint">No real payments or blockchain transactions.</p>
             <button type="button" className="demo-bar__toggle" aria-haspopup="dialog" onClick={() => setOpen(true)}>
               Demo controls
             </button>

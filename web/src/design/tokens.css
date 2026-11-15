@@ -53,7 +53,8 @@
   --border: 1px solid var(--color-border);
 
   /* Layout */
-  --page-max: 1120px;
+  /* One content width for the whole app: header, notice, overview and review all share it. */
+  --content-max: 60rem;
   --gutter: 1rem;
   --target-min: 2.75rem;
   /* Real height of the sticky top bar. SiteTop updates this at runtime; this is the fallback. */

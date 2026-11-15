@@ -15,14 +15,14 @@ interface DepositSummaryPanelProps {
 /**
  * The one primary surface on the overview: the headline amount and what it means, with the
  * supporting accounting beside it only when there is more than one meaningful value to show.
- * With nothing to add, or just the original deposit, the panel sizes to its content: the original
- * deposit becomes a quiet line under the amount instead of a separate box and column.
+ * With nothing to add, or just the original deposit, there is no breakdown column: the original
+ * deposit becomes a quiet line under the amount, and the sentence and action sit beside it.
  * Figures are separate buckets, so a processing transfer is never shown as returned or as held.
  */
 export function DepositSummaryPanel({ summary, detail, waiting, action, headingId }: DepositSummaryPanelProps) {
   const hasBreakdown = summary.facts.length > 0;
   return (
-    <section className={`summary${hasBreakdown ? '' : ' summary--compact'}`} aria-labelledby={headingId}>
+    <section className={`summary${hasBreakdown ? '' : ' summary--lean'}`} aria-labelledby={headingId}>
       <div className="summary__main">
         <div className="summary__lead">
           <h2 id={headingId} className="summary__title">

@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { ConfirmDialog } from '../../components/ConfirmDialog';
 import { Disclosure } from '../../components/Disclosure';
 import { LifecycleStatus } from '../../components/LifecycleTimeline';
-import { formatDate, formatDateTime } from '../../lib/format';
+import { formatDate, formatDateTime, roleLabel } from '../../lib/format';
 import { newIdempotencyKey } from '../../lib/idempotency';
+import { counterpartyOf } from '../../lib/participants';
 import { useMutation } from '../../services/hooks';
 import { useServices } from '../../services/ServiceContext';
 import type { Lease } from '../../services/types';
@@ -18,7 +19,7 @@ export function OverviewPage() {
   const next = describeLease(lease, proposal);
   const summary = summarizeDeposit(lease, proposal);
   const summaryId = useId();
-  const me = lease.participants.find((p) => p.id === lease.viewer.userId);
+  const other = counterpartyOf(lease.participants, lease.viewer.userId);
 
   return (
     <div className="overview">
@@ -27,14 +28,11 @@ export function OverviewPage() {
           <h1 className="overview__property" tabIndex={-1}>
             {lease.property.label}
           </h1>
-          <ul className="overview__people" aria-label="People on this lease">
-            {lease.participants.map((person) => (
-              <li key={person.id}>
-                {person.role === 'tenant' ? 'Tenant' : 'Landlord'}: {person.displayName}
-                {person.id === me?.id ? ' (you)' : ''}
-              </li>
-            ))}
-          </ul>
+          {other && (
+            <p className="overview__people">
+              {roleLabel(other.role)}: {other.displayName}
+            </p>
+          )}
         </div>
 
         <LifecycleStatus stage={lease.stage} complete={lease.phase === 'settled'} />
@@ -141,11 +139,6 @@ function Folds({ lease }: { lease: Lease }) {
       </Disclosure>
 
       <Disclosure title="Recent activity" meta={events[0]?.text ?? 'Nothing yet'}>
-        <p className="fold__note">
-          {receipts.length === 0
-            ? 'Demo data: these entries are simulated, and there are no transaction receipts to show.'
-            : 'Transaction receipts for confirmed transfers are listed below.'}
-        </p>
         <ul className="fold__rows">
           {events.map((event) => (
             <li key={event.id} className="fold__row">

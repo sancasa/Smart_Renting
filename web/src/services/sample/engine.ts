@@ -391,14 +391,14 @@ function evidenceFor(s: SampleState): EvidenceEntry[] {
     {
       id: 'evidence-movein',
       label: 'Move-in inspection',
-      detail: 'Placeholder. Real photos arrive with the inspection screens.',
+      detail: 'Sample record',
     },
   ];
   if (s.phase !== 'active') {
     entries.push({
       id: 'evidence-moveout',
       label: 'Move-out inspection',
-      detail: 'Placeholder. Sample mode assumes the move-out photos are already saved.',
+      detail: 'Sample record',
     });
   }
   if (s.proposal.status === 'submitted' && s.proposal.submittedAt) {

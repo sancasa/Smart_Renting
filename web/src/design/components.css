@@ -1,7 +1,7 @@
 /* ---------- Layout ---------- */
 .page {
   width: 100%;
-  max-width: var(--page-max);
+  max-width: calc(var(--content-max) + 2 * var(--gutter));
   margin: 0 auto;
   padding: 0 var(--gutter);
 }
@@ -90,17 +90,6 @@
   font-size: var(--text-small);
   font-weight: 600;
   white-space: nowrap;
-}
-
-.demo-bar__hint {
-  display: none;
-  font-size: var(--text-small);
-}
-
-@media (min-width: 720px) {
-  .demo-bar__hint {
-    display: block;
-  }
 }
 
 .demo-bar__toggle {
@@ -339,8 +328,6 @@
   display: grid;
   gap: var(--space-6);
   width: 100%;
-  max-width: 60rem;
-  margin-inline: auto;
 }
 
 .review > * {
@@ -565,6 +552,8 @@
 .overview {
   display: grid;
   gap: var(--space-6);
+  /* Children respond to this container's width, not the window's, so they stack exactly when cramped. */
+  container-type: inline-size;
 }
 
 .overview > * {
@@ -581,14 +570,11 @@
 }
 
 .overview__people {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 var(--space-4);
   font-size: var(--text-small);
   color: var(--color-muted);
 }
 
-@media (min-width: 720px) {
+@container (min-width: 36rem) {
   .overview__title {
     display: flex;
     align-items: baseline;
@@ -705,35 +691,33 @@
   color: var(--color-muted);
 }
 
-@media (min-width: 880px) {
+@container (min-width: 44rem) {
   .summary {
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
     gap: var(--space-10);
     padding: var(--space-8);
   }
 
-  /* Nothing to break down: the panel sizes to its content, amount on the left, sentence and action beside it. */
-  .summary--compact {
+  /* No breakdown: the panel still fills the container. Amount on the left, sentence and action beside it. */
+  .summary--lean {
     grid-template-columns: minmax(0, 1fr);
-    width: fit-content;
-    max-width: 100%;
-    padding: var(--space-6);
+    padding: var(--space-6) var(--space-8);
   }
 
-  .summary--compact .summary__main {
-    grid-template-columns: auto auto;
+  .summary--lean .summary__main {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     column-gap: var(--space-10);
     align-items: start;
   }
 
-  .summary--compact .summary__lead {
+  .summary--lean .summary__lead {
     grid-column: 1;
     grid-row: 1 / span 3;
   }
 
-  .summary--compact .summary__detail,
-  .summary--compact .summary__waiting,
-  .summary--compact .summary__main > .button-row {
+  .summary--lean .summary__detail,
+  .summary--lean .summary__waiting,
+  .summary--lean .summary__main > .button-row {
     grid-column: 2;
   }
 }
@@ -857,10 +841,14 @@
   min-width: 0;
 }
 
-@media (min-width: 880px) {
+@container (min-width: 46rem) {
   .folds {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: start;
+  }
+
+  .folds .fold:last-child {
+    border-bottom: 0;
   }
 }
 
@@ -870,12 +858,6 @@
 
 .fold:last-child {
   border-bottom: 1px solid var(--color-border);
-}
-
-@media (min-width: 880px) {
-  .fold:last-child {
-    border-bottom: 0;
-  }
 }
 
 .fold__summary {
@@ -924,11 +906,6 @@
   display: grid;
   gap: var(--space-2);
   padding-bottom: var(--space-4);
-}
-
-.fold__note {
-  font-size: var(--text-small);
-  color: var(--color-muted);
 }
 
 .fold__rows {
