@@ -65,9 +65,8 @@ export function DraftSubmit({ lease, proposal, hasUnsavedEdits }: { lease: Lease
       </h2>
       <p>
         {zero
-          ? `With no charges, the full ${formatUsd(proposal.refundAmount)} refund goes to ${tenant}, and they have nothing to respond to.`
-          : `Submitting sends ${formatUsd(proposal.refundAmount)} to ${tenant} now and keeps ${formatUsd(proposal.deductionTotal)} held until they accept or dispute.`}{' '}
-        After you submit, you can't edit this proposal.
+          ? `No charges: the full ${formatUsd(proposal.refundAmount)} refund goes to ${tenant}, and nothing needs a response.`
+          : `Sends ${formatUsd(proposal.refundAmount)} to ${tenant} now. ${formatUsd(proposal.deductionTotal)} stays held until the deductions are accepted or a dispute is resolved.`}
       </p>
       {hasUnsavedEdits && (
         <p role="status" className="callout callout--caution">
@@ -118,7 +117,7 @@ export function DraftSubmit({ lease, proposal, hasUnsavedEdits }: { lease: Lease
               ? [[`Full refund to ${tenant}`, formatUsd(proposal.refundAmount)]]
               : [
                   [`Refund to ${tenant}`, formatUsd(proposal.refundAmount)],
-                  ['Held until they respond', formatUsd(proposal.deductionTotal)],
+                  ['Held until accepted or resolved', formatUsd(proposal.deductionTotal)],
                 ]
           }
         />
@@ -164,8 +163,7 @@ export function RespondPanel({ lease, proposal }: { lease: Lease; proposal: Prop
         Your response
       </h2>
       <p>
-        Your response applies to version {proposal.version} of this proposal. Your refund of {formatUsd(proposal.refundAmount)} is
-        separate and doesn't change.
+        Applies to version {proposal.version}. Your {formatUsd(proposal.refundAmount)} refund is separate.
       </p>
       <div className="button-row">
         {canAccept && (

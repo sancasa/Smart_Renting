@@ -1,32 +1,23 @@
 import type { Photo, PhotoPair as PhotoPairData } from '../services/types';
 
-function PhotoFrame({ photo }: { photo: Photo }) {
+function Region({ title, photo }: { title: string; photo: Photo }) {
   // Only placeholders exist for now. A saved-photo kind will render an <img> from private storage.
   return (
-    <div className="photo-placeholder" role="img" aria-label={photo.alt}>
-      <span aria-hidden="true">Placeholder photo</span>
-    </div>
+    <figure className="compare__region">
+      <figcaption className="compare__label">{title}</figcaption>
+      <div className="compare__frame" role="img" aria-label={photo.alt}>
+        <span aria-hidden="true">No photo attached</span>
+      </div>
+    </figure>
   );
 }
 
-/** Matched evidence: the same spot at move-in and at move-out, side by side with clear labels. */
+/** Matched evidence for one finding: the same spot at move-in and at move-out, side by side and compact. */
 export function PhotoPair({ pair }: { pair: PhotoPairData }) {
   return (
-    <div className="photo-pair">
-      <figure className="photo-pair__item">
-        <PhotoFrame photo={pair.moveIn} />
-        <figcaption>
-          <span className="photo-pair__label">Move-in</span>
-          <span className="photo-pair__caption">{pair.moveIn.caption}</span>
-        </figcaption>
-      </figure>
-      <figure className="photo-pair__item">
-        <PhotoFrame photo={pair.moveOut} />
-        <figcaption>
-          <span className="photo-pair__label">Move-out</span>
-          <span className="photo-pair__caption">{pair.moveOut.caption}</span>
-        </figcaption>
-      </figure>
+    <div className="compare">
+      <Region title="Move-in" photo={pair.moveIn} />
+      <Region title="Move-out" photo={pair.moveOut} />
     </div>
   );
 }

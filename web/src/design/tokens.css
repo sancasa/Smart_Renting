@@ -5,16 +5,20 @@
  */
 :root {
   /* Color */
-  --color-paper: #f6f3ee;
+  --color-paper: #f6f7f9;
   --color-surface: #ffffff;
-  --color-text: #26292b;
-  --color-muted: #5c6165;
-  --color-border: #ddd8cf;
-  --color-border-soft: #e6e0d5;
-  --color-border-strong: #8b867c;
-  --color-teal: #0e5c63;
-  --color-teal-dark: #0a464b;
-  --color-teal-tint: #e4f0f0;
+  --color-text: #17212b;
+  --color-muted: #566370;
+  --color-border: #d9dfe6;
+  --color-border-soft: #e4e8ed;
+  --color-border-strong: #7a8794;
+  --color-teal: #0f5c63;
+  --color-teal-dark: #0b4a50;
+  --color-teal-tint: #e3f0f0;
+  /* Subtle emphasis for financial breakdowns only. */
+  --color-money: #edf5f3;
+  --color-demo-bg: #eef1f5;
+  --color-demo-text: #3b4652;
   --color-caution: #7a5000;
   --color-caution-tint: #fbf1dc;
   --color-problem: #a63a2b;
@@ -28,7 +32,7 @@
   --text-section: 1.25rem;
   --text-title: 1.5rem;
   --text-display: 1.875rem;
-  --text-figure: 3rem;
+  --text-figure: 3.5rem;
   --leading-tight: 1.2;
   --leading-body: 1.5;
 
@@ -39,6 +43,7 @@
   --space-4: 1rem;
   --space-6: 1.5rem;
   --space-8: 2rem;
+  --space-10: 2.5rem;
   --space-12: 3rem;
 
   /* Shape */
@@ -58,6 +63,5 @@
     --gutter: 1.5rem;
     --text-title: 1.75rem;
     --text-display: 2.125rem;
-    --text-figure: 4.5rem;
   }
 }

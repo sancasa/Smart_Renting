@@ -21,14 +21,16 @@ export function FindingView({ item, disputed }: { item: Finding; disputed?: bool
         </p>
       )}
       <PhotoPair pair={item.photoPair} />
-      <p>
-        <strong>What we found: </strong>
-        {item.observation}
-      </p>
-      <p>
-        <strong>Reason for the charge: </strong>
-        {item.rationale}
-      </p>
+      <dl className="finding__notes">
+        <div className="finding__note">
+          <dt>Found</dt>
+          <dd>{item.observation}</dd>
+        </div>
+        <div className="finding__note">
+          <dt>Reason</dt>
+          <dd>{item.rationale}</dd>
+        </div>
+      </dl>
     </article>
   );
 }
@@ -129,10 +131,12 @@ export function FindingEditor({ leaseId, item, onDirtyChange }: FindingEditorPro
         <p className="finding__amount amount">{formatUsd(item.amount)}</p>
       </div>
       <PhotoPair pair={item.photoPair} />
-      <p>
-        <strong>What we found: </strong>
-        {item.observation}
-      </p>
+      <dl className="finding__notes">
+        <div className="finding__note">
+          <dt>Found</dt>
+          <dd>{item.observation}</dd>
+        </div>
+      </dl>
 
       <form className="stack--tight" onSubmit={submit} noValidate>
         <Field label="Charge amount in dollars" error={errors.amount}>

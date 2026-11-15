@@ -61,26 +61,27 @@
 }
 
 /* ---------- Demo bar (sample mode only) ---------- */
+/* Visible on every screen but deliberately quiet: neutral, slim, and collapsed by default. */
 .demo-bar {
-  background: var(--color-caution-tint);
-  border-bottom: 1px solid #e3cf9f;
-  color: var(--color-caution);
+  background: var(--color-demo-bg);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-demo-text);
 }
 
 .demo-bar__row {
   display: flex;
   align-items: center;
   gap: var(--space-2) var(--space-4);
-  min-height: 2.75rem;
+  min-height: 2.5rem;
   padding-block: var(--space-1);
 }
 
 .demo-bar__label {
-  font-weight: 700;
-  font-size: var(--text-small);
-  padding: 0 var(--space-3);
-  border: 2px dashed currentColor;
+  padding: 0 var(--space-2);
+  border: 1px dashed currentColor;
   border-radius: var(--radius-control);
+  font-size: var(--text-small);
+  font-weight: 600;
 }
 
 .demo-bar__hint {
@@ -103,10 +104,20 @@
 }
 
 .demo-bar__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
   margin-left: auto;
   min-height: 2.5rem;
-  border-color: currentColor;
-  color: inherit;
+  padding: 0 0 0 var(--space-2);
+  border: 0;
+  background: transparent;
+  color: var(--color-demo-text);
+  font-size: var(--text-small);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
 }
 
 .demo-bar__chevron {
@@ -128,7 +139,7 @@
   gap: var(--space-4) var(--space-6);
   padding-block: var(--space-4);
   color: var(--color-text);
-  border-top: 1px solid #e3cf9f;
+  border-top: 1px solid var(--color-border);
 }
 
 .demo-bar__group {
@@ -183,9 +194,10 @@
 
 .site-header__row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-1) var(--space-6);
+  column-gap: var(--space-6);
 }
 
 .site-header__brand {
@@ -196,11 +208,15 @@
   font-weight: 700;
   color: var(--color-teal);
   text-decoration: none;
+  white-space: nowrap;
 }
 
+/* On narrow screens the property gets its own line instead of squeezing the brand and account. */
 .site-header__context {
-  flex: 1 1 12rem;
+  flex: 1 0 100%;
+  order: 3;
   min-width: 0;
+  padding-bottom: var(--space-2);
   color: var(--color-muted);
 }
 
@@ -208,6 +224,15 @@
   font-size: var(--text-small);
   color: var(--color-muted);
   text-align: right;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .site-header__context {
+    flex: 1 1 12rem;
+    order: 0;
+    padding-bottom: 0;
+  }
 }
 
 /* ---------- Buttons ---------- */
@@ -355,6 +380,12 @@
   color: var(--color-caution);
 }
 
+/* Subtle emphasis for the refund breakdown. */
+.money--tinted {
+  background: var(--color-money);
+  border-color: var(--color-border-soft);
+}
+
 /* ---------- Disclosure (Evidence, Activity, history) ---------- */
 .disclosure {
   background: var(--color-surface);
@@ -404,7 +435,7 @@
 .callout--problem {
   border-color: var(--color-problem);
   background: var(--color-problem-tint);
-  color: #6f241a;
+  color: #70241a;
 }
 
 .callout--caution {
@@ -497,40 +528,69 @@
   text-decoration: line-through;
 }
 
-.photo-pair {
+/* Evidence stays with its finding as a compact, labeled before/after comparison. */
+.compare {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-3);
+  max-width: 34rem;
 }
 
-.photo-pair__item {
+.compare__region {
   display: grid;
-  gap: var(--space-2);
+  grid-template-rows: auto 1fr;
   min-width: 0;
-}
-
-.photo-pair__label {
-  font-weight: 700;
-}
-
-.photo-pair__caption {
-  display: block;
-  font-size: var(--text-small);
-  color: var(--color-muted);
-}
-
-.photo-placeholder {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 3 / 2;
-  padding: var(--space-2);
-  border: 2px dashed var(--color-border-strong);
-  border-radius: var(--radius-surface);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-control);
   background: var(--color-paper);
-  color: var(--color-muted);
+}
+
+.compare__label {
+  padding: var(--space-1) var(--space-3);
+  border-bottom: 1px dashed var(--color-border);
   font-size: var(--text-small);
   font-weight: 600;
+}
+
+.compare__frame {
+  display: grid;
+  place-items: center;
+  min-height: 4.25rem;
+  padding: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--color-muted);
   text-align: center;
+}
+
+.finding__notes {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.finding__note {
+  display: grid;
+  gap: 0;
+}
+
+.finding__note dt {
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+.finding__note dd {
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .finding__note {
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+
+  .finding__note dt {
+    padding-top: 0.15rem;
+  }
 }
 
 /* ---------- Forms ---------- */
@@ -622,7 +682,7 @@
 }
 
 .dialog::backdrop {
-  background: rgb(38 41 43 / 0.55);
+  background: rgb(23 33 43 / 0.55);
 }
 
 .dialog__content {
@@ -690,11 +750,12 @@
   }
 }
 
-/* The one elevated surface on the page. */
+/* The one elevated surface on the page. Height follows its content. */
 .summary {
   display: grid;
-  gap: var(--space-6);
-  padding: var(--space-6) var(--space-4);
+  align-items: start;
+  gap: var(--space-4);
+  padding: var(--space-4);
   background: var(--color-surface);
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-panel);
@@ -702,23 +763,28 @@
 
 .summary__main {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-3);
   align-content: start;
   min-width: 0;
 }
 
 .summary__title {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--space-1);
   font-weight: 400;
 }
 
+/* Says what the amount is, so the number is never ambiguous. */
+.summary__label {
+  font-size: var(--text-body);
+  color: var(--color-muted);
+}
+
 .summary__figure {
-  /* Scales down on narrow screens so larger amounts like $10,000.00 still fit the panel. */
-  font-size: min(var(--text-figure), 12vw);
+  font-size: clamp(2.25rem, 10.5vw, var(--text-figure));
   font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.025em;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
 }
 
@@ -726,29 +792,22 @@
   color: var(--color-teal);
 }
 
-.summary__label {
-  font-size: var(--text-title);
-  font-weight: 600;
-  line-height: 1.2;
-}
-
 .summary__detail {
-  max-width: 44ch;
-  font-size: var(--text-large);
+  max-width: 46ch;
 }
 
 .summary__waiting {
-  max-width: 44ch;
-  font-weight: 600;
+  max-width: 46ch;
+  color: var(--color-muted);
 }
 
 .summary__aside {
   display: grid;
-  gap: var(--space-3);
-  align-content: center;
+  gap: var(--space-2);
   min-width: 0;
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--color-border-soft);
+  padding: var(--space-1) var(--space-4) var(--space-3);
+  background: var(--color-money);
+  border-radius: var(--radius-surface);
 }
 
 .facts {
@@ -762,7 +821,7 @@
   justify-content: space-between;
   gap: var(--space-4);
   padding-block: var(--space-3);
-  border-bottom: 1px solid var(--color-border-soft);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .fact:last-child {
@@ -801,21 +860,20 @@
 
 @media (min-width: 880px) {
   .summary {
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-    gap: 0 var(--space-12);
-    padding: var(--space-12);
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: var(--space-10);
+    padding: var(--space-8);
   }
 
-  /* No supporting facts: amount on the left, sentence and action on the right, so the panel stays balanced. */
+  /* No supporting facts: amount on the left, sentence and action on the right. */
   .summary--solo {
     grid-template-columns: minmax(0, 1fr);
   }
 
   .summary--solo .summary__main {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: var(--space-12);
-    align-items: center;
-    align-content: center;
+    column-gap: var(--space-10);
+    align-items: start;
   }
 
   .summary--solo .summary__title {
@@ -828,15 +886,9 @@
   .summary--solo .summary__main > .button-row {
     grid-column: 2;
   }
-
-  .summary__aside {
-    padding: 0 0 0 var(--space-12);
-    border-top: 0;
-    border-left: 1px solid var(--color-border-soft);
-  }
 }
 
-/* Progress is context, not the task, so it stays slim and quiet. */
+/* Progress is context, not the task. A completed step is solid; the step in progress is outlined. */
 .progress {
   display: grid;
   gap: var(--space-2);
@@ -859,14 +911,18 @@
 }
 
 .progress__segment {
-  height: 6px;
-  border-radius: 3px;
+  height: 8px;
+  border-radius: 4px;
   background: var(--color-border);
 }
 
-.progress__step--done .progress__segment,
-.progress__step--current .progress__segment {
+.progress__step--done .progress__segment {
   background: var(--color-teal);
+}
+
+.progress__step--current .progress__segment {
+  background: var(--color-money);
+  box-shadow: inset 0 0 0 2px var(--color-teal);
 }
 
 .progress__name {

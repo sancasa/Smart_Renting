@@ -27,7 +27,7 @@ export function MoneySummary({ lease, headingId }: { lease: Lease; headingId: st
 
   if (!reconciliation.ok) {
     return (
-      <section className="surface money" aria-labelledby={headingId}>
+      <section className="surface money money--tinted" aria-labelledby={headingId}>
         <h2 id={headingId} className="section-title">
           Deposit amounts
         </h2>
@@ -43,7 +43,7 @@ export function MoneySummary({ lease, headingId }: { lease: Lease; headingId: st
   const showPaid = isPositive(funds.paidToLandlordConfirmed);
 
   return (
-    <section className="surface money" aria-labelledby={headingId}>
+    <section className="surface money money--tinted" aria-labelledby={headingId}>
       <h2 id={headingId} className="section-title">
         Deposit amounts
       </h2>
@@ -80,7 +80,7 @@ export function MoneySummary({ lease, headingId }: { lease: Lease; headingId: st
         <Row tone="strong" label="Still held" value={formatUsd(funds.held)} />
       </dl>
       {hasPending && (
-        <p className="small muted">Processing amounts are counted once they are confirmed. They are not included in returned or held.</p>
+        <p className="small muted">Processing amounts count once they are confirmed.</p>
       )}
     </section>
   );
@@ -101,7 +101,7 @@ export function RefundBreakdown({ lease, proposal, headingId }: { lease: Lease; 
   const hasDeductions = isPositive(proposal.deductionTotal);
 
   return (
-    <section className="surface money" aria-labelledby={headingId}>
+    <section className="surface money money--tinted" aria-labelledby={headingId}>
       <h2 id={headingId} className="section-title">
         Refund breakdown
       </h2>
@@ -117,8 +117,8 @@ export function RefundBreakdown({ lease, proposal, headingId }: { lease: Lease; 
       </dl>
       <p className="small muted">
         {hasDeductions
-          ? `${formatUsd(proposal.deductionTotal)} stays held until ${viewer === 'tenant' ? 'you accept or dispute' : `${tenant} accepts or disputes`}.`
-          : 'No deductions, so nothing stays held and no response is needed.'}
+          ? `${formatUsd(proposal.deductionTotal)} stays held until ${viewer === 'tenant' ? 'you accept' : `${tenant} accepts`} or a dispute is resolved.`
+          : 'No deductions, so nothing stays held.'}
       </p>
     </section>
   );

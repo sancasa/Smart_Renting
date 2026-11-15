@@ -30,7 +30,7 @@ export function DemoBar() {
           <p className="demo-bar__hint">No real payments or blockchain transactions.</p>
           <button
             type="button"
-            className="button button--small demo-bar__toggle"
+            className="demo-bar__toggle"
             aria-expanded={open}
             aria-controls={panelId}
             onClick={() => setOpen((value) => !value)}

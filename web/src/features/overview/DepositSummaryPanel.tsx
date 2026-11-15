@@ -23,8 +23,8 @@ export function DepositSummaryPanel({ summary, detail, waiting, action, headingI
     <section className={`summary${solo ? ' summary--solo' : ''}`} aria-labelledby={headingId}>
       <div className="summary__main">
         <h2 id={headingId} className="summary__title">
-          <span className={`summary__figure summary__figure--${summary.tone}`}>{summary.figure}</span>
           <span className="summary__label">{summary.label}</span>
+          <span className={`summary__figure summary__figure--${summary.tone}`}>{summary.figure}</span>
         </h2>
         <p className="summary__detail">{detail}</p>
         {waiting && <p className="summary__waiting">{waiting}</p>}
@@ -47,7 +47,7 @@ export function DepositSummaryPanel({ summary, detail, waiting, action, headingI
             ))}
           </dl>
           {summary.hasProcessing && (
-            <p className="summary__footnote">Processing amounts are not counted as returned or held until they are confirmed.</p>
+            <p className="summary__footnote">Processing amounts count once confirmed.</p>
           )}
         </div>
       )}

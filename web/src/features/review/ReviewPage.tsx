@@ -32,24 +32,24 @@ function pageCopy(mode: Mode, lease: Lease, proposal: Proposal | null): { title:
     case 'draft':
       return {
         title: 'Review proposed charges',
-        lead: `Move-out was requested${lease.moveOutRequestedOn ? ` on ${formatDate(lease.moveOutRequestedOn)}` : ''}. Remove charges you can't support, or adjust an amount or reason.`,
+        lead: `Move-out requested${lease.moveOutRequestedOn ? ` ${formatDate(lease.moveOutRequestedOn)}` : ''}. Remove or adjust charges before you submit.`,
       };
     case 'respond':
       return {
         title: 'Review deductions',
-        lead: `${landlord} submitted version ${proposal?.version} on ${submitted}. Accept all the deductions, or dispute the ones you disagree with.`,
+        lead: `Version ${proposal?.version} from ${landlord}, submitted ${submitted}.`,
       };
     case 'disputed':
       return {
         title: 'Awaiting review',
-        lead: 'The disputed deductions are waiting for a ruling. The held amount stays held until the dispute is resolved.',
+        lead: 'Waiting for a ruling. The held amount stays held until the dispute is resolved.',
       };
     case 'settled':
-      return { title: 'Settlement', lead: 'Every transfer is confirmed and nothing is held.' };
+      return { title: 'Settlement', lead: 'All transfers are confirmed. Nothing is held.' };
     case 'readonly':
       return {
         title: lease.viewer.role === 'landlord' ? 'Submitted proposal' : 'Proposal',
-        lead: `Version ${proposal?.version} was submitted on ${submitted}. It can't be edited.`,
+        lead: `Version ${proposal?.version}, submitted ${submitted}. It can't be edited.`,
       };
     case 'empty':
       return {
@@ -163,10 +163,12 @@ function DisputeSummary({ lease, proposal }: { lease: Lease; proposal: Proposal 
           </li>
         ))}
       </ul>
-      <p>
-        <strong>Explanation: </strong>
-        {dispute.reason}
-      </p>
+      <dl className="finding__notes">
+        <div className="finding__note">
+          <dt>Explanation</dt>
+          <dd>{dispute.reason}</dd>
+        </div>
+      </dl>
       <p className="callout">{dispute.ruling ? `Ruling: ${dispute.ruling}` : 'No ruling has been made yet.'}</p>
     </section>
   );
