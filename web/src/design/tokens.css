@@ -10,6 +10,7 @@
   --color-text: #26292b;
   --color-muted: #5c6165;
   --color-border: #ddd8cf;
+  --color-border-soft: #e6e0d5;
   --color-border-strong: #8b867c;
   --color-teal: #0e5c63;
   --color-teal-dark: #0a464b;
@@ -27,6 +28,7 @@
   --text-section: 1.25rem;
   --text-title: 1.5rem;
   --text-display: 1.875rem;
+  --text-figure: 3rem;
   --leading-tight: 1.2;
   --leading-body: 1.5;
 
@@ -42,6 +44,7 @@
   /* Shape */
   --radius-control: 6px;
   --radius-surface: 10px;
+  --radius-panel: 16px;
   --border: 1px solid var(--color-border);
 
   /* Layout */
@@ -55,5 +58,6 @@
     --gutter: 1.5rem;
     --text-title: 1.75rem;
     --text-display: 2.125rem;
+    --text-figure: 4.5rem;
   }
 }

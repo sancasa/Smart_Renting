@@ -27,7 +27,7 @@ export function DemoBar() {
       <div className="page">
         <div className="demo-bar__row">
           <p className="demo-bar__label">Demo · simulated data</p>
-          <p className="demo-bar__hint">Nothing here is a real payment or blockchain transaction.</p>
+          <p className="demo-bar__hint">No real payments or blockchain transactions.</p>
           <button
             type="button"
             className="button button--small demo-bar__toggle"
@@ -36,10 +36,14 @@ export function DemoBar() {
             onClick={() => setOpen((value) => !value)}
           >
             {open ? 'Hide demo controls' : 'Show demo controls'}
+            <svg className="demo-bar__chevron" width="16" height="16" viewBox="0 0 18 18" aria-hidden="true" focusable="false">
+              <path d="m4.5 7 4.5 4.5L13.5 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </button>
         </div>
 
         <div id={panelId} className="demo-bar__panel" hidden={!open}>
+          <p className="demo-bar__panel-hint demo-bar__wide">Nothing here is a real payment or blockchain transaction.</p>
           <fieldset className="demo-bar__group">
             <legend className="demo-bar__legend">Preview as</legend>
             {(['tenant', 'landlord'] as const).map((value) => (

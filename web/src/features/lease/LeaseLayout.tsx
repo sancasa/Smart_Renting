@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Outlet, useLocation, useOutletContext, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useMatch, useOutletContext, useParams } from 'react-router-dom';
 import { ErrorState } from '../../components/ErrorState';
 import { Header } from '../../components/Header';
 import { useLeaseData, type LeaseData } from '../../services/hooks';
@@ -19,6 +19,8 @@ export function LeaseLayout() {
   const { leaseId = '' } = useParams();
   const { data, error, loading, reload, reloadNow } = useLeaseData(leaseId);
   const location = useLocation();
+  // The overview names the property in its main content, so its header stays compact.
+  const onOverview = useMatch({ path: '/leases/:leaseId', end: true }) !== null;
   const mainRef = useRef<HTMLElement>(null);
   const firstRender = useRef(true);
 
@@ -59,7 +61,7 @@ export function LeaseLayout() {
   const context: LeaseOutletContext = { ...data, reload, reloadNow };
   return (
     <>
-      <Header lease={data.lease} />
+      <Header lease={data.lease} showProperty={!onOverview} />
       <main id="main" className="main" tabIndex={-1} ref={mainRef} aria-busy={loading}>
         {error && (
           <div className="page">

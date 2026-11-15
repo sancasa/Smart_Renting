@@ -10,6 +10,12 @@
   padding-block: var(--space-6) var(--space-12);
 }
 
+@media (min-width: 768px) {
+  .main {
+    padding-block: var(--space-8) 4rem;
+  }
+}
+
 .main:focus {
   outline: none;
 }
@@ -63,28 +69,52 @@
 
 .demo-bar__row {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2) var(--space-4);
-  min-height: var(--target-min);
-  padding-block: var(--space-2);
+  min-height: 2.75rem;
+  padding-block: var(--space-1);
 }
 
 .demo-bar__label {
   font-weight: 700;
+  font-size: var(--text-small);
   padding: 0 var(--space-3);
   border: 2px dashed currentColor;
   border-radius: var(--radius-control);
 }
 
 .demo-bar__hint {
+  display: none;
   font-size: var(--text-small);
+}
+
+.demo-bar__panel-hint {
+  font-size: var(--text-small);
+}
+
+@media (min-width: 720px) {
+  .demo-bar__hint {
+    display: block;
+  }
+
+  .demo-bar__panel-hint {
+    display: none;
+  }
 }
 
 .demo-bar__toggle {
   margin-left: auto;
+  min-height: 2.5rem;
   border-color: currentColor;
   color: inherit;
+}
+
+.demo-bar__chevron {
+  transition: transform 120ms ease;
+}
+
+.demo-bar__toggle[aria-expanded='true'] .demo-bar__chevron {
+  transform: rotate(180deg);
 }
 
 .demo-bar__panel[hidden] {
@@ -153,11 +183,9 @@
 
 .site-header__row {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-1) var(--space-6);
-  padding-block: var(--space-3);
 }
 
 .site-header__brand {
@@ -179,6 +207,7 @@
 .site-header__account {
   font-size: var(--text-small);
   color: var(--color-muted);
+  text-align: right;
 }
 
 /* ---------- Buttons ---------- */
@@ -213,6 +242,12 @@
 .button--primary:hover:not(:disabled) {
   background: var(--color-teal-dark);
   border-color: var(--color-teal-dark);
+}
+
+.button--hero {
+  min-height: 3rem;
+  padding-inline: var(--space-8);
+  font-size: var(--text-large);
 }
 
 .button--small {
@@ -258,106 +293,6 @@
   font-size: var(--text-display);
 }
 
-.people {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1) var(--space-6);
-  color: var(--color-muted);
-}
-
-/* ---------- Milestones ---------- */
-.milestones {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-6);
-}
-
-.milestones__item {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--color-muted);
-}
-
-.milestones__marker {
-  display: grid;
-  place-items: center;
-  width: 1.25rem;
-  height: 1.25rem;
-  flex: none;
-  border: 2px solid var(--color-border-strong);
-  border-radius: 50%;
-}
-
-.milestones__item--done .milestones__marker {
-  background: var(--color-teal);
-  border-color: var(--color-teal);
-  color: #ffffff;
-}
-
-.milestones__item--current {
-  color: var(--color-text);
-  font-weight: 700;
-}
-
-.milestones__item--current .milestones__marker {
-  border-color: var(--color-teal);
-}
-
-.milestones__item--current .milestones__marker::after {
-  content: '';
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: var(--color-teal);
-}
-
-/* ---------- Overview ---------- */
-.overview-grid {
-  display: grid;
-  gap: var(--space-6);
-}
-
-.overview-grid > * {
-  min-width: 0;
-}
-
-@media (min-width: 880px) {
-  .overview-grid {
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-    align-items: start;
-  }
-}
-
-.next-action {
-  display: grid;
-  gap: var(--space-4);
-  border-left: 6px solid var(--color-teal);
-}
-
-.next-action--waiting {
-  border-left-color: var(--color-border-strong);
-}
-
-.next-action__title {
-  font-size: var(--text-title);
-}
-
-.next-action__detail {
-  font-size: var(--text-large);
-  max-width: 60ch;
-}
-
-.next-action__waiting {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
-  max-width: 60ch;
-  padding: var(--space-3);
-  background: var(--color-paper);
-  border-radius: var(--radius-control);
-  font-weight: 600;
-}
 
 /* ---------- Money ---------- */
 .money {
@@ -716,5 +651,356 @@
 .lead {
   font-size: var(--text-large);
   max-width: 60ch;
+  color: var(--color-muted);
+}
+
+/* ---------- Lease overview ---------- */
+.overview {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.overview > * {
+  min-width: 0;
+}
+
+.overview__title {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.overview__property {
+  font-size: var(--text-title);
+}
+
+.overview__people {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-4);
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+@media (min-width: 720px) {
+  .overview__title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-6);
+  }
+}
+
+/* The one elevated surface on the page. */
+.summary {
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-panel);
+}
+
+.summary__main {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+  min-width: 0;
+}
+
+.summary__title {
+  display: grid;
+  gap: var(--space-2);
+  font-weight: 400;
+}
+
+.summary__figure {
+  /* Scales down on narrow screens so larger amounts like $10,000.00 still fit the panel. */
+  font-size: min(var(--text-figure), 12vw);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary__figure--outcome {
+  color: var(--color-teal);
+}
+
+.summary__label {
+  font-size: var(--text-title);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.summary__detail {
+  max-width: 44ch;
+  font-size: var(--text-large);
+}
+
+.summary__waiting {
+  max-width: 44ch;
+  font-weight: 600;
+}
+
+.summary__aside {
+  display: grid;
+  gap: var(--space-3);
+  align-content: center;
+  min-width: 0;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border-soft);
+}
+
+.facts {
+  display: grid;
+  margin: 0;
+}
+
+.fact {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-3);
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.fact:last-child {
+  border-bottom: 0;
+}
+
+.fact__label {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  color: var(--color-muted);
+}
+
+.fact__note {
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+.fact__note--processing {
+  font-weight: 600;
+  color: var(--color-caution);
+}
+
+.fact__value {
+  margin: 0;
+  font-size: var(--text-large);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.summary__footnote {
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+@media (min-width: 880px) {
+  .summary {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 0 var(--space-12);
+    padding: var(--space-12);
+  }
+
+  /* No supporting facts: amount on the left, sentence and action on the right, so the panel stays balanced. */
+  .summary--solo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .summary--solo .summary__main {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: var(--space-12);
+    align-items: center;
+    align-content: center;
+  }
+
+  .summary--solo .summary__title {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+  }
+
+  .summary--solo .summary__detail,
+  .summary--solo .summary__waiting,
+  .summary--solo .summary__main > .button-row {
+    grid-column: 2;
+  }
+
+  .summary__aside {
+    padding: 0 0 0 var(--space-12);
+    border-top: 0;
+    border-left: 1px solid var(--color-border-soft);
+  }
+}
+
+/* Progress is context, not the task, so it stays slim and quiet. */
+.progress {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.progress__text {
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+.progress__bar {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.progress__step {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.progress__segment {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-border);
+}
+
+.progress__step--done .progress__segment,
+.progress__step--current .progress__segment {
+  background: var(--color-teal);
+}
+
+.progress__name {
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+.progress__step--current .progress__name {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+@media (max-width: 719px) {
+  .progress__name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+}
+
+/* Evidence and activity: open rows with rules, not cards. */
+.folds {
+  display: grid;
+  gap: 0 var(--space-12);
+}
+
+.folds > * {
+  min-width: 0;
+}
+
+@media (min-width: 880px) {
+  .folds {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+
+.fold {
+  border-top: 1px solid var(--color-border);
+}
+
+.fold:last-child {
+  border-bottom: 1px solid var(--color-border);
+}
+
+@media (min-width: 880px) {
+  .fold:last-child {
+    border-bottom: 0;
+  }
+}
+
+.fold__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 3.25rem;
+  padding-block: var(--space-2);
+  cursor: pointer;
+  list-style: none;
+}
+
+.fold__summary::-webkit-details-marker {
+  display: none;
+}
+
+.fold__title {
+  flex: none;
+  font-size: var(--text-large);
+  font-weight: 700;
+}
+
+.fold__meta {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+.fold__chevron {
+  flex: none;
+  color: var(--color-teal);
+  transition: transform 120ms ease;
+}
+
+.fold[open] .fold__chevron {
+  transform: rotate(180deg);
+}
+
+.fold__body {
+  display: grid;
+  gap: var(--space-2);
+  padding-bottom: var(--space-4);
+}
+
+.fold__note {
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+.fold__rows {
+  display: grid;
+}
+
+.fold__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-2);
+  border-top: 1px solid var(--color-border-soft);
+}
+
+.fold__row:first-child {
+  border-top: 0;
+}
+
+.fold__row--stacked {
+  display: grid;
+  gap: 2px;
+}
+
+.fold__row-title {
+  font-weight: 600;
+}
+
+.fold__row-note {
+  font-size: var(--text-small);
   color: var(--color-muted);
 }

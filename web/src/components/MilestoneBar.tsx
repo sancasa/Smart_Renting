@@ -8,37 +8,32 @@ const STEPS: { stage: Stage; label: string }[] = [
   { stage: 'settlement', label: 'Settlement' },
 ];
 
-function CheckIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
-      <path d="M2 6.5 4.7 9 10 3.2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 /**
- * Shows progress only. It is not navigation and cannot skip a required step.
- * Each step says its state in words as well as shape, so color is never the only cue.
+ * Secondary progress: a slim segmented line with the current step in words. It shows where
+ * the lease is and cannot skip a step. Every step says its state in text for screen readers,
+ * and the step names stay visible on wider screens, so color is never the only cue.
  */
 export function MilestoneBar({ stage, complete }: { stage: Stage; complete: boolean }) {
   const currentIndex = STEPS.findIndex((s) => s.stage === stage);
+  const summary = complete ? 'All 5 steps complete' : `Step ${currentIndex + 1} of ${STEPS.length}: ${STEPS[currentIndex].label}`;
   return (
-    <ol className="milestones" aria-label="Deposit progress">
-      {STEPS.map((step, index) => {
-        const state = complete || index < currentIndex ? 'done' : index === currentIndex ? 'current' : 'upcoming';
-        const spoken = state === 'done' ? 'completed' : state === 'current' ? 'current step' : 'not started';
-        return (
-          <li key={step.stage} className={`milestones__item milestones__item--${state}`} aria-current={state === 'current' ? 'step' : undefined}>
-            <span className="milestones__marker" aria-hidden="true">
-              {state === 'done' && <CheckIcon />}
-            </span>
-            <span>
-              {step.label}
-              <span className="sr-only">, {spoken}</span>
-            </span>
-          </li>
-        );
-      })}
-    </ol>
+    <div className="progress">
+      <p className="progress__text">{summary}</p>
+      <ol className="progress__bar" aria-label="Deposit progress">
+        {STEPS.map((step, index) => {
+          const state = complete || index < currentIndex ? 'done' : index === currentIndex ? 'current' : 'upcoming';
+          const spoken = state === 'done' ? 'completed' : state === 'current' ? 'current step' : 'not started';
+          return (
+            <li key={step.stage} className={`progress__step progress__step--${state}`} aria-current={state === 'current' ? 'step' : undefined}>
+              <span className="progress__segment" aria-hidden="true" />
+              <span className="progress__name">
+                {step.label}
+                <span className="sr-only">, {spoken}</span>
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
   );
 }
