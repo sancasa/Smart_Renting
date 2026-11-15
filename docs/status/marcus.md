@@ -18,6 +18,9 @@
   Held-funds wording corrected everywhere: disputing does not release money; funds stay held until accepted or the dispute is resolved (regression test covers every state and role).
   Evidence: typecheck, 45 tests, build pass; 41 rendered text/background pairs measured in the browser, lowest 5.55:1; no overflow and no target under 40px at 320px; no new dependencies.
 
+- Interaction polish pass (checkpoint 4, no new features): one shared content container; compact sticky top bar (notice + header, height published as `--top-h` so scroll padding keeps focus clear of it); connected lifecycle timeline under the property heading; refund breakdown sticky on desktop only when the window is at least 960x640; shared `Disclosure` (chevrons) for evidence, activity, history, proposal details, and demo assumptions; versions and exact timestamps moved behind "Proposal details"; demo controls moved into a native modal dialog (closed by default); after navigation the page scrolls to top and the page heading takes focus (back/forward keeps browser scroll restoration).
+  Evidence: typecheck, 49 tests, build pass; measured in the running app at 1440, 1100, 800, 390 and 320 px: focus never hidden by the bar in either scroll direction, opening a disclosure moves nothing above it, reduced motion cuts transitions to about 0, no horizontal overflow, no target under 40px, no new dependencies.
+
 ## Still simulated / not built
 - Everything runs on `web/src/services/sample/`. No backend, wallet, contract, AI or storage is connected.
 - The live adapter (`web/src/services/live/`) intentionally throws `integration_blocked` for every call.
