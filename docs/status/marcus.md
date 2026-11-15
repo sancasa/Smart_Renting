@@ -14,6 +14,10 @@
 - Lease overview redesign (checkpoint 2, overview only): one deposit summary panel with the headline amount (e.g. "$880.00 returned to you", "$120.00 needs your review") and receipt-style supporting facts; compact header and demo bar; slim progress line; Evidence and Recent activity as disclosure rows. Review layout unchanged apart from the shared compact header/demo bar.
   Evidence: `npm run typecheck`, `npm test` (43 tests), `npm run build` pass; awaiting-response and settled states inspected at 1440, 390 and 320 px (no overflow, targets at least 40px).
 
+- Visual refinement of overview and deposit review (checkpoint 3): cool page `#F6F7F9`, text `#17212B`, primary `#0F5C63`, `#EDF5F3` for financial breakdowns. Overview: labeled 56px amount ("Deductions under review"), tighter content-height panel, top-aligned breakdown, one non-duplicating sentence per state, settlement shown "in progress" (outlined) until funds are resolved. Review: compact labeled comparison regions (about 266x100px), finding/amount/evidence in one short card, fewer bold labels, shorter copy. Demo notice is visible but quiet, controls collapsed.
+  Held-funds wording corrected everywhere: disputing does not release money; funds stay held until accepted or the dispute is resolved (regression test covers every state and role).
+  Evidence: typecheck, 45 tests, build pass; 41 rendered text/background pairs measured in the browser, lowest 5.55:1; no overflow and no target under 40px at 320px; no new dependencies.
+
 ## Still simulated / not built
 - Everything runs on `web/src/services/sample/`. No backend, wallet, contract, AI or storage is connected.
 - The live adapter (`web/src/services/live/`) intentionally throws `integration_blocked` for every call.
